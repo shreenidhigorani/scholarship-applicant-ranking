@@ -1,0 +1,38 @@
+name,address,phone,marks,category_priority,income_bracket,distance_km
+Riya Sharma,Thane West,9876543210,92,1,2,5.5
+Sharma Riya,Thane West,9876543210,91,1,2,5.6
+Ria Sharma,Thane W,9876543210,92,1,2,5.4
+Amit Patil,Pune,9123456780,85,2,3,20.0
+Amit Patil,Pune City,9123456780,85,2,3,20.5
+Amith Patil,Pune,9123456780,84,2,3,21.0
+Neha Joshi,Mumbai,9988776655,88,1,2,10.0
+Neha Joshi,Mumbai City,9988776655,88,1,2,10.2
+Neha Jhoshi,Mumbai,9988776655,87,1,2,10.0
+Rahul Mehta,Nashik,9876501234,78,3,4,35.0
+Rahul Mehta,Nashik Road,9876501234,78,3,4,35.5
+Mehta Rahul,Nashik,9876501234,79,3,4,34.8
+Sneha Kulkarni,Kolhapur,9765432109,94,1,1,12.0
+Sneha Kulkarni,Kolhapur,9765432109,94,1,1,12.0
+Sneha Kulkarni,Kolhapur City,9765432109,93,1,1,12.4
+Vikram Shah,Surat,9812345670,82,2,3,25.0
+Vikram Shah,Surat,9812345671,82,2,3,25.0
+Vikram S Shah,Surat,9812345670,83,2,3,25.2
+Priya Nair,Kochi,9898989898,91,1,2,8.0
+Priya Nair,Kochi,9898989898,91,1,2,8.0
+Priya Nair,Ernakulam,9898989898,90,1,2,8.5
+Karan Verma,Delhi,9000011111,76,3,5,40.0
+Karan Verma,Delhi,9000012222,76,3,5,40.0
+Anjali Desai,Pune,9111122222,89,2,2,18.0
+Anjali Desai,Mumbai,9222233333,89,2,2,18.0
+Rohan Kapoor,Bengaluru,9333344444,87,2,3,30.0
+Rohan Kapur,Bengaluru,9333344444,87,2,3,30.2
+Meera Iyer,Chennai,9444455555,95,1,1,6.0
+Meera Iyer,Chennai,9444455556,95,1,1,6.0
+Arjun Rao,Hyderabad,9555566666,84,2,3,22.0
+Arjun Rao,Hyderabad,9666677777,84,2,3,22.0
+Pooja Singh,Jaipur,9777788888,80,3,4,28.0
+Pooja Singh,Jaipur,9777788888,80,3,4,28.0
+Nikhil Jain,Indore,9888899999,73,3,5,45.0
+Nikhil Jain,Bhopal,9888899990,73,3,5,45.0
+Kavya Reddy,Hyderabad,9999900000,93,1,1,7.0
+Kavya Reddy,Hyderabad,9999900000,93,1,1,7.0

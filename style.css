@@ -1,0 +1,249 @@
+html,
+body,
+[class*="css"] {
+    font-family: Georgia, serif;
+}
+
+.main {
+    background-color: #FBF9F4;
+}
+
+section[data-testid="stSidebar"] {
+    background-color: #FFFEFB;
+    border-right: 1px solid #E8E0D2;
+}
+
+
+/* ---------------- HEADER ---------------- */
+
+.main-header {
+    background: #A31B2E;
+    padding: 26px 32px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+    color: #FBF9F4;
+}
+
+.main-header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.main-header p {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #F0DCC8;
+}
+
+
+/* ---------------- SECTION TITLE ---------------- */
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #A31B2E;
+    margin-top: 18px;
+    margin-bottom: 10px;
+}
+
+
+/* ---------------- METRIC CARDS ---------------- */
+
+.metric-card {
+    background-color: #FFFEFB;
+    border: 1px solid #E8E0D2;
+    border-radius: 10px;
+    padding: 14px 18px;
+    text-align: center;
+}
+
+.metric-card .metric-value {
+    font-size: 26px;
+    font-weight: 600;
+    color: #A31B2E;
+}
+
+.metric-card .metric-label {
+    font-size: 12px;
+    color: #8A8270;
+    margin-top: 2px;
+}
+
+
+/* ---------------- INFO CARDS ---------------- */
+
+.info-card {
+    background-color: #FFFEFB;
+    padding: 18px;
+    border-radius: 10px;
+    border: 1px solid #E8E0D2;
+    margin-bottom: 15px;
+}
+
+.info-card h3 {
+    margin-top: 0;
+    color: #A31B2E;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.info-card p {
+    color: #5C5548;
+    font-size: 13px;
+}
+
+
+/* ---------------- CLUSTER CARDS ---------------- */
+
+.cluster-card {
+    background-color: #FFFEFB;
+    padding: 16px 20px;
+    border-radius: 10px;
+    border: 1px solid #E8E0D2;
+    border-left: 4px solid #A31B2E;
+    margin-top: 14px;
+    margin-bottom: 8px;
+}
+
+.cluster-card h3 {
+    margin: 0 0 4px;
+    color: #A31B2E;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.cluster-card p {
+    margin: 0;
+    color: #6B6656;
+    font-size: 13px;
+}
+
+
+/* ---------------- SCORE PILL ---------------- */
+
+.score-pill {
+    display: inline-block;
+    background-color: #F0E4CE;
+    color: #6B4A16;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-top: 6px;
+}
+
+
+/* ---------------- STATUS PILLS ---------------- */
+
+.status-pill-pending {
+    display: inline-block;
+    background-color: #E5E1D6;
+    color: #4A4436;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+
+.status-pill-duplicate {
+    display: inline-block;
+    background-color: #E8B923;
+    color: #4A3B00;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+
+.status-pill-distinct {
+    display: inline-block;
+    background-color: #D8E4D6;
+    color: #33502E;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+
+
+/* ---------------- NORMAL BUTTONS ---------------- */
+
+div.stButton > button {
+    font-family: Georgia, serif;
+    border-radius: 6px;
+    border: 1px solid #A31B2E;
+}
+
+div.stButton > button:not([kind="primary"]):hover {
+    border: 1px solid #A31B2E;
+    color: #A31B2E;
+}
+
+
+/* ---------------- FIND SUSPECTED DUPLICATES BUTTON ---------------- */
+
+div.stButton > button[kind="primary"] {
+    background-color: #C9A227 !important;
+    color: #3F3200 !important;
+    border: 1px solid #C9A227 !important;
+    font-weight: 600;
+}
+
+div.stButton > button[kind="primary"]:hover {
+    background-color: #B18B1D !important;
+    color: #302600 !important;
+    border: 1px solid #B18B1D !important;
+}
+
+
+/* ---------------- SIMILARITY SLIDER ---------------- */
+
+/* Slider value */
+div[data-testid="stSlider"] [data-testid="stThumbValue"] {
+    color: #9F7D18 !important;
+}
+
+/* Slider handle */
+div[data-testid="stSlider"] [role="slider"] {
+    background-color: #C9A227 !important;
+    border: 2px solid #9F7D18 !important;
+}
+
+/* Slider track */
+div[data-testid="stSlider"] [data-baseweb="slider"] {
+    background-color: transparent !important;
+}
+
+/* Slider track and filled section */
+div[data-testid="stSlider"] [data-baseweb="slider"] > div {
+    background-color: #E8DFC3 !important;
+}
+
+div[data-testid="stSlider"] [data-baseweb="slider"] > div > div {
+    background-color: #C9A227 !important;
+}
+
+
+/* ---------------- SIDEBAR OPEN / CLOSE ---------------- */
+
+button[data-testid="stSidebarCollapseButton"],
+button[data-testid="stSidebarExpandButton"] {
+    color: #C9A227 !important;
+}
+
+button[data-testid="stSidebarCollapseButton"]:hover,
+button[data-testid="stSidebarExpandButton"]:hover {
+    color: #B18B1D !important;
+}
+
+
+/* ---------------- FOOTER ---------------- */
+
+.footer {
+    text-align: center;
+    color: #9A9280;
+    font-size: 13px;
+    margin-top: 40px;
+    padding: 20px;
+}
