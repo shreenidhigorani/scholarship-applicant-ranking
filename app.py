@@ -3,6 +3,7 @@ import pandas as pd
 from pathlib import Path
 
 from backend.db import (
+    create_tables,
     clear_applicants,
     insert_applicant,
     get_all_applicants,
@@ -11,6 +12,8 @@ from backend.db import (
 
 from backend.similarity import calculate_similarity
 from backend.union_find import UnionFind
+from backend.relation_checker import strictly_dominates
+from backend.topo_sort import topological_sort
 
 
 # ---------------- PAGE SETTINGS ----------------
@@ -20,6 +23,11 @@ st.set_page_config(
     page_icon="🎓",
     layout="wide"
 )
+
+
+# ---------------- CREATE DATABASE TABLES ----------------
+
+create_tables()
 
 
 # ---------------- LOAD CUSTOM CSS ----------------
@@ -58,7 +66,6 @@ with st.sidebar:
         help="Upload a CSV containing applicant information."
     )
 
-    # Show detection settings only after CSV upload
     if uploaded_file is not None:
 
         st.markdown("### Detection settings")
@@ -259,6 +266,7 @@ if uploaded_file is not None:
             st.session_state["pair_scores"] = pair_scores
             st.session_state["decisions"] = {}
             st.session_state["total_uploaded"] = len(applicant_ids)
+            st.session_state["stage2_ranking"] = None
 
         st.success("Duplicate checking completed.")
 
@@ -301,7 +309,7 @@ if "duplicate_clusters" in st.session_state:
     decisions = st.session_state["decisions"]
 
     st.markdown(
-        '<div class="section-title">Duplicate Detection Results</div>',
+        '<div class="section-title">Stage 1 — Duplicate Detection</div>',
         unsafe_allow_html=True
     )
 
@@ -438,8 +446,6 @@ if "duplicate_clusters" in st.session_state:
 
             col1, col2 = st.columns(2)
 
-            # ---------------- DUPLICATE BUTTON ----------------
-
             with col1:
 
                 if st.button(
@@ -459,8 +465,6 @@ if "duplicate_clusters" in st.session_state:
 
                     st.rerun()
 
-            # ---------------- DISTINCT BUTTON ----------------
-
             with col2:
 
                 if st.button(
@@ -479,8 +483,6 @@ if "duplicate_clusters" in st.session_state:
                     )
 
                     st.rerun()
-
-            # ---------------- STATUS ----------------
 
             if cluster_id in decisions:
 
@@ -521,8 +523,6 @@ if "duplicate_clusters" in st.session_state:
             duplicate_clusters.items()
         )
 
-        # ---------------- ALL CLUSTERS ----------------
-
         with tab_all:
 
             for idx, (cluster_id, members) in enumerate(
@@ -536,8 +536,6 @@ if "duplicate_clusters" in st.session_state:
                     members,
                     "all"
                 )
-
-        # ---------------- PENDING CLUSTERS ----------------
 
         with tab_pending:
 
@@ -564,8 +562,6 @@ if "duplicate_clusters" in st.session_state:
                 st.info(
                     "No clusters left to review."
                 )
-
-        # ---------------- RESOLVED CLUSTERS ----------------
 
         with tab_resolved:
 
@@ -626,10 +622,197 @@ if "duplicate_clusters" in st.session_state:
             )
 
 
+# ============================================================
+# STAGE 2 — MERIT RANKING
+# ============================================================
+
+if "duplicate_clusters" in st.session_state:
+
+    st.markdown(
+        '<div class="section-title">Stage 2 — Merit Ranking</div>',
+        unsafe_allow_html=True
+    )
+
+    duplicate_clusters = st.session_state["duplicate_clusters"]
+    applicants = st.session_state["applicants"]
+    decisions = st.session_state["decisions"]
+
+    # Check whether every detected cluster has been reviewed
+    pending_clusters = [
+        cluster_id
+        for cluster_id in duplicate_clusters
+        if cluster_id not in decisions
+    ]
+
+    if pending_clusters:
+
+        st.info(
+            "Please review all suspected duplicate clusters "
+            "before starting the merit ranking."
+        )
+
+    else:
+
+        # Find applicants belonging to confirmed duplicate clusters
+        duplicate_applicant_ids = set()
+
+        for cluster_id, members in duplicate_clusters.items():
+
+            if decisions.get(cluster_id) == "duplicate":
+
+                for applicant_id in members:
+
+                    duplicate_applicant_ids.add(applicant_id)
+
+        # Keep applicants who are not confirmed duplicates
+        ranking_applicants = {}
+
+        for applicant_id, applicant in applicants.items():
+
+            if applicant_id not in duplicate_applicant_ids:
+
+                ranking_applicants[applicant_id] = applicant
+
+        st.write(
+            f"Applicants available for ranking: "
+            f"**{len(ranking_applicants)}**"
+        )
+
+        if len(ranking_applicants) < 2:
+
+            st.warning(
+                "At least two applicants are required "
+                "to create a merit ranking."
+            )
+
+        else:
+
+            rank_button = st.button(
+                "🏆 Generate Merit Ranking",
+                type="primary",
+                use_container_width=True
+            )
+
+            if rank_button:
+
+                with st.spinner(
+                    "Building dominance relationships and ranking applicants..."
+                ):
+
+                    graph = {}
+
+                    # Create a node for every applicant
+                    for applicant_id in ranking_applicants:
+
+                        graph[applicant_id] = []
+
+                    # Create dominance edges
+                    applicant_ids = list(
+                        ranking_applicants.keys()
+                    )
+
+                    for i in range(len(applicant_ids)):
+
+                        for j in range(i + 1, len(applicant_ids)):
+
+                            id1 = applicant_ids[i]
+                            id2 = applicant_ids[j]
+
+                            applicant1 = ranking_applicants[id1]
+                            applicant2 = ranking_applicants[id2]
+
+                            if strictly_dominates(
+                                applicant1,
+                                applicant2
+                            ):
+
+                                graph[id1].append(id2)
+
+                            elif strictly_dominates(
+                                applicant2,
+                                applicant1
+                            ):
+
+                                graph[id2].append(id1)
+
+                    ranking = topological_sort(graph)
+
+                    if ranking is None:
+
+                        st.error(
+                            "A cycle was detected in the dominance graph. "
+                            "A valid topological ranking could not be created."
+                        )
+
+                    else:
+
+                        st.session_state[
+                            "stage2_ranking"
+                        ] = ranking
+
+                        st.session_state[
+                            "stage2_graph"
+                        ] = graph
+
+                        st.rerun()
+
+
+# ---------------- DISPLAY MERIT RANKING ----------------
+
+if st.session_state.get("stage2_ranking") is not None:
+
+    ranking = st.session_state["stage2_ranking"]
+    applicants = st.session_state["applicants"]
+
+    st.markdown(
+        '<div class="section-title">Final Merit Ranking</div>',
+        unsafe_allow_html=True
+    )
+
+    ranking_rows = []
+
+    for position, applicant_id in enumerate(
+        ranking,
+        start=1
+    ):
+
+        applicant = applicants[applicant_id]
+
+        ranking_rows.append({
+            "Rank": position,
+            "Applicant": applicant["name"],
+            "Marks": applicant["marks"],
+            "Category Priority":
+                applicant["category_priority"],
+            "Income Bracket":
+                applicant["income_bracket"],
+            "Distance (km)":
+                applicant["distance_km"]
+        })
+
+    ranking_df = pd.DataFrame(
+        ranking_rows
+    )
+
+    st.dataframe(
+        ranking_df,
+        use_container_width=True,
+        hide_index=True
+    )
+
+    st.download_button(
+        "⬇ Download Merit Ranking",
+        data=ranking_df.to_csv(index=False),
+        file_name="merit_ranking.csv",
+        mime="text/csv",
+        use_container_width=True
+    )
+
+
 # ---------------- FOOTER ----------------
 
 st.markdown("""
 <div class="footer">
-    Scholarship Applicant System • Discrete Mathematics Project
+    Scholarship Applicant System • Discrete Mathematics • Shreenidhi Gorani
 </div>
 """, unsafe_allow_html=True)
