@@ -1,0 +1,21 @@
+At your current 80% similarity threshold, you should get multiple clusters such as:
+
+Riya Sharma → 3 records
+Amit Patil → 3 records
+Neha Joshi → 3 records
+Rahul Mehta → 3 records
+Sneha Kulkarni → 3 records
+Vikram Shah → likely 2–3 records depending on similarity
+Priya Nair → 3 records
+Rohan Kapoor/Kapur → likely a duplicate cluster
+Meera Iyer → likely a cluster
+Pooja Singh → duplicate cluster
+Kavya Reddy → duplicate cluster
+
+And there are also intentionally similar-looking but distinct records, for example:
+
+Anjali Desai — Pune vs Anjali Desai — Mumbai
+Karan Verma with different phone numbers
+Arjun Rao with different phone numbers
+Nikhil Jain with different cities/phone numbers
+Vikram Shah has a slightly different phone number in one record
