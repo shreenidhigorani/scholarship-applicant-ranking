@@ -1,6 +1,4 @@
 import sqlite3
-
-
 DATABASE_NAME = "applicants.db"
 
 
@@ -18,7 +16,6 @@ def create_tables():
     """
     conn = get_connection()
     cursor = conn.cursor()
-
     # Table 1: stores applicant information
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS applicants (
@@ -32,7 +29,6 @@ def create_tables():
             distance_km REAL NOT NULL
         )
     """)
-
     # Table 2: stores the committee's decision about suspected duplicates
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS cluster_decisions (
@@ -41,7 +37,6 @@ def create_tables():
             decision TEXT NOT NULL
         )
     """)
-
     conn.commit()
     conn.close()
 
@@ -53,7 +48,6 @@ def insert_applicant(name, address, phone, marks,
     """
     conn = get_connection()
     cursor = conn.cursor()
-
     cursor.execute("""
         INSERT INTO applicants
         (name, address, phone, marks, category_priority,
@@ -68,7 +62,6 @@ def insert_applicant(name, address, phone, marks,
         income_bracket,
         distance_km
     ))
-
     conn.commit()
     conn.close()
 
@@ -79,18 +72,14 @@ def get_all_applicants():
     """
     conn = get_connection()
     cursor = conn.cursor()
-
     cursor.execute("""
         SELECT id, name, address, phone, marks,
                category_priority, income_bracket, distance_km
         FROM applicants
         ORDER BY id
     """)
-
     applicants = cursor.fetchall()
-
     conn.close()
-
     return applicants
 
 
@@ -100,9 +89,7 @@ def clear_applicants():
     """
     conn = get_connection()
     cursor = conn.cursor()
-
     cursor.execute("DELETE FROM applicants")
-
     conn.commit()
     conn.close()
 
@@ -110,17 +97,14 @@ def clear_applicants():
 def save_cluster_decision(cluster_id, decision):
     conn = get_connection()
     cursor = conn.cursor()
-
     cursor.execute("""
         DELETE FROM cluster_decisions
         WHERE cluster_id = ?
     """, (cluster_id,))
-
     cursor.execute("""
         INSERT INTO cluster_decisions (cluster_id, decision)
         VALUES (?, ?)
     """, (cluster_id, decision))
-
     conn.commit()
     conn.close()
 
@@ -131,15 +115,11 @@ def get_cluster_decisions():
     """
     conn = get_connection()
     cursor = conn.cursor()
-
     cursor.execute("""
         SELECT id, cluster_id, decision
         FROM cluster_decisions
         ORDER BY id
     """)
-
     decisions = cursor.fetchall()
-
     conn.close()
-
     return decisions
