@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 from pathlib import Path
-
-
 from backend.db import (
     create_tables,
     clear_applicants,
@@ -22,18 +20,14 @@ st.set_page_config(
 )
 # CREATE DATABASE TABLES
 create_tables()
-# ============================================================
 # LOAD CUSTOM CSS
-# ============================================================
 css_file = Path(__file__).parent / "style.css"
 with open(css_file, "r", encoding="utf-8") as f:
     st.markdown(
         f"<style>{f.read()}</style>",
         unsafe_allow_html=True
     )
-# ============================================================
 # HEADER
-# ============================================================
 st.markdown("""
 <div class="main-header">
     <h1>🎓 Scholarship Applicant System</h1>
@@ -43,9 +37,7 @@ st.markdown("""
     </p>
 </div>
 """, unsafe_allow_html=True)
-# ============================================================
 # SIDEBAR
-# ============================================================
 with st.sidebar:
     st.markdown("### Upload data")
     uploaded_file = st.file_uploader(
@@ -77,9 +69,7 @@ with st.sidebar:
     else:
         threshold = 0
         run_button = False
-# ============================================================
 # REQUIRED COLUMNS
-# ============================================================
 required_columns = [
     "name",
     "address",
@@ -89,9 +79,7 @@ required_columns = [
     "income_bracket",
     "distance_km"
 ]
-# ============================================================
 # INTRODUCTION
-# ============================================================
 if uploaded_file is None:
     st.markdown(
         '<div class="section-title">Applicant Duplicate Checker</div>',
@@ -124,9 +112,7 @@ if uploaded_file is None:
             <p>Review suspected duplicate groups before ranking.</p>
         </div>
         """, unsafe_allow_html=True)
-# ============================================================
 # PROCESS UPLOADED FILE
-# ============================================================
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
     with st.expander("Preview uploaded data", expanded=False):
@@ -208,9 +194,7 @@ if uploaded_file is not None:
             st.session_state["stage2_graph"] = {}
             st.session_state["stage2_comparisons"] = []
         st.success("Duplicate checking completed.")
-# ============================================================
 # HELPER FUNCTION
-# ============================================================
 
 
 def cluster_average_score(members, pair_scores):
@@ -227,9 +211,7 @@ def cluster_average_score(members, pair_scores):
     return sum(scores) / len(scores)
 
 
-# ============================================================
 # STAGE 1 — DUPLICATE DETECTION
-# ============================================================
 if "duplicate_clusters" in st.session_state:
     duplicate_clusters = st.session_state["duplicate_clusters"]
     applicants = st.session_state["applicants"]
@@ -237,7 +219,7 @@ if "duplicate_clusters" in st.session_state:
     total_uploaded = st.session_state["total_uploaded"]
     decisions = st.session_state["decisions"]
     st.markdown(
-        '<div class="section-title">Stage 1 — Duplicate Detection</div>',
+        '<div class="section-title">Duplicate Detection</div>',
         unsafe_allow_html=True
     )
     confirmed_duplicate = sum(
@@ -286,9 +268,7 @@ if "duplicate_clusters" in st.session_state:
                 "Resolved"
             ]
         )
-        # ====================================================
-        # RENDER CLUSTER
-        # ====================================================
+        # RENDER CLUSTER]
 
         def render_cluster(
             cluster_number,
@@ -348,9 +328,7 @@ if "duplicate_clusters" in st.session_state:
                     hide_index=True
                 )
             col1, col2 = st.columns(2)
-            # -----------------------------------------------
             # DUPLICATE BUTTON
-            # -----------------------------------------------
             with col1:
                 if st.button(
                     "✓ Confirm as Duplicate",
@@ -365,9 +343,7 @@ if "duplicate_clusters" in st.session_state:
                         "duplicate"
                     )
                     st.rerun()
-            # -----------------------------------------------
             # DISTINCT BUTTON
-            # -----------------------------------------------
             with col2:
                 if st.button(
                     "✕ Mark as Distinct",
@@ -382,9 +358,7 @@ if "duplicate_clusters" in st.session_state:
                         "distinct"
                     )
                     st.rerun()
-            # -----------------------------------------------
             # STATUS
-            # -----------------------------------------------
             if cluster_id in decisions:
                 decision = decisions[cluster_id]
                 if decision == "duplicate":
@@ -409,15 +383,11 @@ if "duplicate_clusters" in st.session_state:
                     unsafe_allow_html=True
                 )
             st.write("")
-        # ====================================================
         # CLUSTER LIST
-        # ====================================================
         cluster_items = list(
             duplicate_clusters.items()
         )
-        # ----------------------------------------------------
         # ALL CLUSTERS
-        # ----------------------------------------------------
         with tab_all:
             for idx, (cluster_id, members) in enumerate(
                 cluster_items,
@@ -429,9 +399,7 @@ if "duplicate_clusters" in st.session_state:
                     members,
                     "all"
                 )
-        # ----------------------------------------------------
         # PENDING CLUSTERS
-        # ----------------------------------------------------
         with tab_pending:
             any_pending = False
             for idx, (cluster_id, members) in enumerate(
@@ -450,9 +418,7 @@ if "duplicate_clusters" in st.session_state:
                 st.info(
                     "No clusters left to review."
                 )
-        # ----------------------------------------------------
         # RESOLVED CLUSTERS
-        # ----------------------------------------------------
         with tab_resolved:
             any_resolved = False
             for idx, (cluster_id, members) in enumerate(
@@ -471,9 +437,7 @@ if "duplicate_clusters" in st.session_state:
                 st.info(
                     "No clusters resolved yet."
                 )
-        # ====================================================
         # DOWNLOAD DECISIONS
-        # ====================================================
         if decisions:
             rows = []
             for cluster_id, members in duplicate_clusters.items():
@@ -542,7 +506,6 @@ if "duplicate_clusters" in st.session_state:
             f"**{len(ranking_applicants)}**"
         )
         eligible_data = []
-
         for display_id, (applicant_id, applicant) in enumerate(
             ranking_applicants.items(),
             start=1
@@ -558,7 +521,6 @@ if "duplicate_clusters" in st.session_state:
                 "Distance (km)":
                     applicant["distance_km"]
             })
-
         eligible_df = pd.DataFrame(eligible_data)
         st.dataframe(
             eligible_df,
@@ -657,9 +619,7 @@ if "duplicate_clusters" in st.session_state:
                     use_container_width=True,
                     hide_index=True
                 )
-                # --------------------------------------------
                 # 2. PREFERENCE RELATIONS
-                # --------------------------------------------
                 st.markdown(
                     "### 2. Preference Relations"
                 )
