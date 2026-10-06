@@ -1,4 +1,3 @@
-# similarity.py
 from rapidfuzz.fuzz import token_sort_ratio
 
 

@@ -1,271 +1,557 @@
+/* =============================================================
+   Meridian — style.css
+   LIGHT MODE ONLY  |  Palette: navy #1E3A8A on cool blue-grey #E9EEF6
+   ============================================================= */
+
+/* ---------- Google Font ---------- */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+/* ---------- Palette tokens + light colour-scheme ---------- */
+:root {
+  color-scheme: light;
+
+  --bg-page: #e9eef6;
+  --bg-surface: #ffffff;
+  --bg-alt: #f4f7fb;
+  --border: #cbd5e1;
+  --primary: #1e3a8a;
+  --primary-hover: #172e6e;
+  --primary-tint: #eff6ff;
+  --text-body: #1f2937;
+  --text-muted: #64748b;
+  --text-on-pri: #ffffff;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.06);
+  --shadow-hover: 0 4px 16px rgba(15, 23, 42, 0.14);
+}
+
+/* ---------- Base ---------- */
 html,
-body,
-[class*="css"] {
-    font-family: Georgia, serif;
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  color: var(--text-body);
+  background-color: var(--bg-page) !important;
 }
 
-.main {
-    background-color: #FBF9F4;
+.stApp {
+  background-color: var(--bg-page) !important;
 }
 
-section[data-testid="stSidebar"] {
-    background-color: #FFFEFB;
-    border-right: 1px solid #E8E0D2;
+.block-container {
+  max-width: 1100px !important;
+  /* push content below fixed app bar */
+  padding-top: 4.5rem !important;
+  padding-bottom: 4rem !important;
 }
 
+/* =============================================================
+   HIDE STREAMLIT CHROME
+   ============================================================= */
 
-/* ---------------- HEADER ---------------- */
-
-.main-header {
-    background: #A31B2E;
-    padding: 26px 32px;
-    border-radius: 10px;
-    margin-bottom: 22px;
-    color: #FBF9F4;
+#MainMenu,
+header[data-testid="stHeader"],
+footer[data-testid="stAppViewFooter"],
+footer {
+  display: none !important;
 }
 
-.main-header h1 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 600;
+section[data-testid="stSidebar"],
+button[data-testid="stSidebarCollapseButton"],
+button[data-testid="stSidebarExpandButton"],
+[data-testid="collapsedControl"] {
+  display: none !important;
 }
 
-.main-header p {
-    margin-top: 6px;
-    font-size: 14px;
-    color: #F0DCC8;
+/* =============================================================
+   TOP APP BAR  (fixed, full-width, navy)
+   ============================================================= */
+
+.app-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--primary);
+  height: 58px;
+  display: flex;
+  align-items: center;
+  padding: 0 36px;
+  gap: 14px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.18);
 }
 
+.app-bar-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Georgia, serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-on-pri);
+  flex-shrink: 0;
+  letter-spacing: -0.5px;
+}
 
-/* ---------------- SECTION TITLE ---------------- */
+.app-bar-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.app-bar-name {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-on-pri);
+  letter-spacing: -0.2px;
+  line-height: 1;
+}
+
+.app-bar-tagline {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.68);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+/* =============================================================
+   SHARED CARD STYLE
+   ============================================================= */
+
+.upload-card,
+.metric-card,
+.info-card,
+.cluster-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* =============================================================
+   UPLOAD SETTINGS CARD
+   ============================================================= */
+
+.upload-card {
+  padding: 22px 24px 0 24px;
+  margin-bottom: 0;
+}
+
+.upload-card-title {
+  font-family: Georgia, serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 14px;
+}
+
+/* =============================================================
+   SECTION TITLES
+   ============================================================= */
 
 .section-title {
-    font-size: 20px;
-    font-weight: 600;
-    color: #A31B2E;
-    margin-top: 18px;
-    margin-bottom: 10px;
+  font-family: Georgia, serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 40px;
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--border);
 }
 
-
-/* ---------------- METRIC CARDS ---------------- */
+/* =============================================================
+   METRIC CARDS
+   ============================================================= */
 
 .metric-card {
-    background-color: #FFFEFB;
-    border: 1px solid #E8E0D2;
-    border-radius: 10px;
-    padding: 14px 18px;
-    text-align: center;
+  padding: 22px 16px;
+  text-align: center;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
 }
 
 .metric-card .metric-value {
-    font-size: 26px;
-    font-weight: 600;
-    color: #A31B2E;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1;
 }
 
 .metric-card .metric-label {
-    font-size: 12px;
-    color: #8A8270;
-    margin-top: 2px;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 7px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
+/* =============================================================
+   INFO CARDS  (landing page — friendly empty-state style)
+   ============================================================= */
 
-/* ---------------- INFO CARDS ---------------- */
+/* Equal-height columns */
+[data-testid="stHorizontalBlock"] {
+  align-items: stretch !important;
+}
+
+/* Propagate height through every Streamlit wrapper div in a column */
+[data-testid="stColumn"],
+[data-testid="stColumn"] > div,
+[data-testid="stColumn"] > div > div,
+[data-testid="stColumn"] > div > div > div {
+  height: 100%;
+}
 
 .info-card {
-    background-color: #FFFEFB;
-    padding: 18px;
-    border-radius: 10px;
-    border: 1px solid #E8E0D2;
-    margin-bottom: 15px;
+  padding: 28px 20px 28px;
+  margin-bottom: 0;
+  text-align: center;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  /* guaranteed minimum so all three are the same size */
+  min-height: 170px;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.info-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+.info-card .info-card-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+  line-height: 1;
 }
 
 .info-card h3 {
-    margin-top: 0;
-    color: #A31B2E;
-    font-size: 16px;
-    font-weight: 600;
+  margin: 0 0 8px;
+  font-family: Georgia, serif;
+  color: var(--primary);
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .info-card p {
-    color: #5C5548;
-    font-size: 13px;
+  color: var(--text-muted);
+  font-size: 13.5px;
+  line-height: 1.55;
+  margin: 0;
 }
 
-
-/* ---------------- CLUSTER CARDS ---------------- */
+/* =============================================================
+   CLUSTER CARDS
+   ============================================================= */
 
 .cluster-card {
-    background-color: #FFFEFB;
-    padding: 16px 20px;
-    border-radius: 10px;
-    border: 1px solid #E8E0D2;
-    border-left: 4px solid #A31B2E;
-    margin-top: 14px;
-    margin-bottom: 8px;
+  padding: 18px 22px;
+  border-left: 5px solid var(--primary);
+  margin-top: 16px;
+  margin-bottom: 10px;
 }
 
 .cluster-card h3 {
-    margin: 0 0 4px;
-    color: #A31B2E;
-    font-size: 16px;
-    font-weight: 600;
+  margin: 0 0 4px;
+  font-family: Georgia, serif;
+  color: var(--primary);
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .cluster-card p {
-    margin: 0;
-    color: #6B6656;
-    font-size: 13px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13.5px;
 }
 
-
-/* ---------------- SCORE PILL ---------------- */
+/* =============================================================
+   SCORE PILL
+   ============================================================= */
 
 .score-pill {
-    display: inline-block;
-    background-color: #F0E4CE;
-    color: #6B4A16;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 12px;
-    margin-top: 6px;
+  display: inline-block;
+  background: var(--primary-tint);
+  color: var(--primary);
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 3px 12px;
+  border-radius: 20px;
+  margin-top: 8px;
+  border: 1px solid #bfdbfe;
 }
 
-
-/* ---------------- STATUS PILLS ---------------- */
+/* =============================================================
+   STATUS PILLS
+   pending:   #E2E8F0 / #475569
+   duplicate: #FEF3C7 / #92400E / 1px #F59E0B border
+   distinct:  #DCFCE7 / #166534
+   ============================================================= */
 
 .status-pill-pending {
-    display: inline-block;
-    background-color: #E5E1D6;
-    color: #4A4436;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 12px;
+  display: inline-block;
+  background: #e2e8f0;
+  color: #475569;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-top: 6px;
 }
 
 .status-pill-duplicate {
-    display: inline-block;
-    background-color: #E8B923;
-    color: #4A3B00;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 12px;
+  display: inline-block;
+  background: #fef3c7;
+  color: #92400e;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-top: 6px;
+  border: 1px solid #f59e0b;
 }
 
 .status-pill-distinct {
-    display: inline-block;
-    background-color: #D8E4D6;
-    color: #33502E;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 12px;
+  display: inline-block;
+  background: #dcfce7;
+  color: #166534;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-top: 6px;
 }
 
+/* =============================================================
+   BUTTONS
+   Primary  → solid navy
+   All other → white fill, navy border/text
+   ============================================================= */
 
-/* ---------------- NORMAL BUTTONS ---------------- */
-
-div.stButton > button {
-    font-family: Georgia, serif;
-    border-radius: 6px;
-    border: 1px solid #A31B2E;
+div.stButton > button,
+div.stDownloadButton > button {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1.5px solid var(--primary);
+  color: var(--primary);
+  background: var(--bg-surface);
+  transition:
+    background 0.14s ease,
+    color 0.14s ease,
+    border-color 0.14s ease,
+    box-shadow 0.14s ease;
+  letter-spacing: 0.01em;
 }
 
-div.stButton > button:not([kind="primary"]):hover {
-    border: 1px solid #A31B2E;
-    color: #A31B2E;
+div.stButton > button:hover,
+div.stDownloadButton > button:hover {
+  background: var(--primary-tint);
+  color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  box-shadow: 0 2px 8px rgba(30, 58, 138, 0.14);
 }
 
+div.stButton > button:focus-visible,
+div.stDownloadButton > button:focus-visible {
+  outline: 3px solid rgba(30, 58, 138, 0.4);
+  outline-offset: 2px;
+}
 
-/* ---------------- FIND SUSPECTED DUPLICATES BUTTON ---------------- */
-
+/* Primary buttons — solid navy */
 div.stButton > button[kind="primary"] {
-    background-color: #C9A227 !important;
-    color: #3F3200 !important;
-    border: 1px solid #C9A227 !important;
-    font-weight: 600;
+  background-color: var(--primary) !important;
+  color: var(--text-on-pri) !important;
+  border-color: var(--primary) !important;
 }
 
 div.stButton > button[kind="primary"]:hover {
-    background-color: #B18B1D !important;
-    color: #302600 !important;
-    border: 1px solid #B18B1D !important;
+  background-color: var(--primary-hover) !important;
+  border-color: var(--primary-hover) !important;
+  color: var(--text-on-pri) !important;
 }
 
+/* =============================================================
+   SLIDER: single colour, no hover halo
+   ============================================================= */
 
-/* ---------------- SIMILARITY SLIDER ---------------- */
-
-/* Slider value */
-div[data-testid="stSlider"] [data-testid="stThumbValue"] {
-    color: #9F7D18 !important;
-}
-
-/* Slider handle */
 div[data-testid="stSlider"] [role="slider"] {
-    background-color: #C9A227 !important;
-    border: 2px solid #9F7D18 !important;
+  background-color: var(--primary) !important;
+  border: 2px solid var(--primary) !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
-/* Slider track */
-div[data-testid="stSlider"] [data-baseweb="slider"] {
-    background-color: transparent !important;
+div[data-testid="stSlider"] [role="slider"]:hover,
+div[data-testid="stSlider"] [role="slider"]:focus,
+div[data-testid="stSlider"] [role="slider"]:focus-visible,
+div[data-testid="stSlider"] [role="slider"]:active {
+  box-shadow: none !important;
+  outline: none !important;
 }
 
-/* Slider track and filled section */
-div[data-testid="stSlider"] [data-baseweb="slider"] > div {
-    background-color: #E8DFC3 !important;
+div[data-testid="stSlider"] [data-testid="stThumbValue"],
+div[data-testid="stSlider"] [data-testid="stSliderThumbValue"] {
+  color: var(--primary) !important;
+  font-weight: 600;
+  background: transparent !important;
 }
 
-div[data-testid="stSlider"] [data-baseweb="slider"] > div > div {
-    background-color: #C9A227 !important;
+/* =============================================================
+   TABS
+   ============================================================= */
+
+.stTabs [data-baseweb="tab-list"] {
+  background: transparent;
+  border-bottom: 2px solid var(--border);
+  gap: 2px;
 }
 
-
-
-.stage2-info {
-    background: #f8f0e7;
-    border-left: 5px solid #b8860b;
-    border-radius: 8px;
-    padding: 16px 20px;
-    margin: 15px 0 25px 0;
+.stTabs [data-baseweb="tab"] {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  padding: 8px 18px;
+  border-radius: 8px 8px 0 0;
+  border: none;
+  background: transparent;
+  transition:
+    color 0.12s,
+    background 0.12s;
 }
 
-.stage2-info-title {
-    color: #7a1f2b;
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 6px;
+.stTabs [data-baseweb="tab"]:hover {
+  color: var(--primary);
+  background: var(--primary-tint);
 }
 
-.stage2-info-text {
-    color: #4a3a32;
-    font-size: 15px;
-    line-height: 1.6;
+.stTabs [aria-selected="true"] {
+  color: var(--primary) !important;
+  border-bottom: 3px solid var(--primary) !important;
+  background: var(--bg-surface) !important;
 }
 
-/* ---------------- SIDEBAR OPEN / CLOSE ---------------- */
+/* =============================================================
+   EXPANDERS
+   ============================================================= */
 
-button[data-testid="stSidebarCollapseButton"],
-button[data-testid="stSidebarExpandButton"] {
-    color: #C9A227 !important;
+.streamlit-expanderHeader {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 600;
+  color: var(--text-body);
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 8px;
 }
 
-button[data-testid="stSidebarCollapseButton"]:hover,
-button[data-testid="stSidebarExpandButton"]:hover {
-    color: #B18B1D !important;
+.streamlit-expanderContent {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
 }
 
+/* =============================================================
+   DATAFRAMES
+   ============================================================= */
 
-/* ---------------- FOOTER ---------------- */
+[data-testid="stDataFrame"] {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  font-family: "Inter", system-ui, sans-serif;
+  box-shadow: var(--shadow);
+}
+
+/* =============================================================
+   ALERTS
+   ============================================================= */
+
+.stAlert {
+  border-radius: var(--radius);
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* =============================================================
+   GRAPHVIZ
+   ============================================================= */
+
+[data-testid="stGraphVizChart"] {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-surface);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* =============================================================
+   FILE UPLOADER  (make it blend with card surface)
+   ============================================================= */
+
+/* Drop zone wrapper */
+[data-testid="stFileUploader"] > div {
+  background: var(--bg-alt);
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  transition:
+    border-color 0.14s ease,
+    background 0.14s ease;
+}
+
+/* Inner section — make the hit target taller */
+[data-testid="stFileUploader"] section {
+  min-height: 130px;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Hover state: navy tint */
+[data-testid="stFileUploader"] > div:hover {
+  border-color: var(--primary);
+  background: var(--primary-tint);
+}
+
+/* =============================================================
+   FOOTER
+   ============================================================= */
 
 .footer {
-    text-align: center;
-    color: #9A9280;
-    font-size: 13px;
-    margin-top: 40px;
-    padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 13px;
+  margin-top: 64px;
+  padding: 20px;
+  border-top: 1px solid var(--border);
 }

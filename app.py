@@ -14,9 +14,10 @@ from backend.relation_checker import strictly_dominates
 from backend.topo_sort import topological_sort
 # PAGE SETTINGS
 st.set_page_config(
-    page_title="Scholarship Applicant System",
+    page_title="Meridian",
     page_icon="🎓",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 # CREATE DATABASE TABLES
 create_tables()
@@ -27,26 +28,50 @@ with open(css_file, "r", encoding="utf-8") as f:
         f"<style>{f.read()}</style>",
         unsafe_allow_html=True
     )
-# HEADER
+# APP BAR
 st.markdown("""
-<div class="main-header">
-    <h1>🎓 Scholarship Applicant System</h1>
-    <p>
-        A two-stage system for detecting duplicate applicants
-        and supporting merit-based ranking.
-    </p>
+<div class="app-bar">
+    <div class="app-bar-logo">S</div>
+    <div class="app-bar-brand">
+        <span class="app-bar-name">Meridian</span>
+        <span class="app-bar-tagline">Duplicate detection &amp; merit ranking</span>
+    </div>
 </div>
 """, unsafe_allow_html=True)
-# SIDEBAR
-with st.sidebar:
-    st.markdown("### Upload data")
+
+# REQUIRED COLUMNS
+required_columns = [
+    "name",
+    "address",
+    "phone",
+    "marks",
+    "category_priority",
+    "income_bracket",
+    "distance_km"
+]
+
+# SAMPLE CSV for download on landing page
+_SAMPLE_CSV = (
+    "name,address,phone,marks,category_priority,income_bracket,distance_km\n"
+    "Alice Kumar,12 MG Road Bengaluru,9876543210,85.5,1,2,12.3\n"
+    "Bob Sharma,45 Anna Nagar Chennai,9123456789,78.0,2,3,8.7\n"
+    "Carol Nair,7 Park Street Kolkata,9988776655,92.0,1,1,5.0\n"
+)
+
+# UPLOAD & SETTINGS CARD
+st.markdown("""
+<div class="upload-card">
+    <div class="upload-card-title">📂 Load Applicant Data</div>
+</div>
+""", unsafe_allow_html=True)
+
+with st.container():
     uploaded_file = st.file_uploader(
         "Choose a CSV file",
         type=["csv"],
         help="Upload a CSV containing applicant information."
     )
     if uploaded_file is not None:
-        st.markdown("### Detection settings")
         threshold = st.slider(
             "Similarity threshold",
             min_value=0,
@@ -69,16 +94,7 @@ with st.sidebar:
     else:
         threshold = 0
         run_button = False
-# REQUIRED COLUMNS
-required_columns = [
-    "name",
-    "address",
-    "phone",
-    "marks",
-    "category_priority",
-    "income_bracket",
-    "distance_km"
-]
+
 # INTRODUCTION
 if uploaded_file is None:
     st.markdown(
@@ -86,7 +102,7 @@ if uploaded_file is None:
         unsafe_allow_html=True
     )
     st.write(
-        "Upload applicant records from the sidebar to identify "
+        "Upload applicant records above to identify "
         "potentially duplicated applications before the "
         "merit-ranking stage."
     )
@@ -112,6 +128,19 @@ if uploaded_file is None:
             <p>Review suspected duplicate groups before ranking.</p>
         </div>
         """, unsafe_allow_html=True)
+
+    st.write("")
+    # Sample CSV download — below the info cards
+    _dl_col, _ = st.columns([1, 2])
+    with _dl_col:
+        st.download_button(
+            "⬇ Download sample CSV",
+            data=_SAMPLE_CSV,
+            file_name="sample_applicants.csv",
+            mime="text/csv"
+        )
+    st.caption("Use the sample file above to try the app with demo data.")
+
 # PROCESS UPLOADED FILE
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
@@ -497,6 +526,39 @@ if "duplicate_clusters" in st.session_state:
                 ranking_applicants[applicant_id] = applicant
         # Keep the applicants available after Streamlit reruns.
         st.session_state["ranking_applicants"] = ranking_applicants
+
+        # STAGE 2 METRIC CARDS (read-only, display only)
+        _comparisons_for_metrics = st.session_state.get(
+            "stage2_comparisons", []
+        )
+        _eligible_count = len(ranking_applicants)
+        _comparable_count = sum(
+            1 for _r in _comparisons_for_metrics
+            if _r.get("Result", "") != "Incomparable"
+        )
+        _incomparable_count = sum(
+            1 for _r in _comparisons_for_metrics
+            if _r.get("Result", "") == "Incomparable"
+        )
+        _s2m1, _s2m2, _s2m3 = st.columns(3)
+        _s2_metrics = [
+            (_s2m1, _eligible_count, "Eligible applicants"),
+            (_s2m2, _comparable_count, "Comparable pairs"),
+            (_s2m3, _incomparable_count, "Incomparable pairs"),
+        ]
+        for _col, _val, _lbl in _s2_metrics:
+            with _col:
+                st.markdown(
+                    f"""
+                    <div class="metric-card">
+                        <div class="metric-value">{_val}</div>
+                        <div class="metric-label">{_lbl}</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+        st.write("")
+
         # ELIGIBLE APPLICANTS
         st.markdown(
             "### 📋 Applicants Entering Merit Evaluation"
@@ -667,7 +729,9 @@ if "duplicate_clusters" in st.session_state:
                 dot = """
                 digraph {
                     rankdir=LR;
-                    node [shape=box];
+                    bgcolor="#E9EEF6";
+                    node [shape=box, style="filled,rounded", fillcolor="#FFFFFF", color="#1E3A8A", fontcolor="#1F2937", fontname="Inter", penwidth=1.5];
+                    edge [color="#64748B", penwidth=1.2, arrowsize=0.8];
                 """
                 for applicant_id, applicant in (
                     ranking_applicants.items()
@@ -754,11 +818,22 @@ if st.session_state.get("stage2_ranking") is not None:
     ranking_df = pd.DataFrame(
         ranking_rows
     )
+
+    # DISPLAY COPY with top-3 highlight (ranking_df unchanged)
+    def _highlight_top3(row):
+        if row["Rank"] <= 3:
+            return [
+                "background-color: #EFF6FF; color: #1E3A8A; font-weight: 600;"
+            ] * len(row)
+        return [""] * len(row)
+
+    _ranking_display = ranking_df.style.apply(_highlight_top3, axis=1)
     st.dataframe(
-        ranking_df,
+        _ranking_display,
         use_container_width=True,
         hide_index=True
     )
+
     st.download_button(
         "⬇ Download Merit Ranking",
         data=ranking_df.to_csv(index=False),
@@ -769,6 +844,6 @@ if st.session_state.get("stage2_ranking") is not None:
 # FOOTER
 st.markdown("""
 <div class="footer">
-    Scholarship Applicant System • Shreenidhi Gorani
+    Meridian &bull; Built by Shreenidhi Gorani
 </div>
 """, unsafe_allow_html=True)
