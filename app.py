@@ -62,9 +62,6 @@ if not st.session_state["started"]:
     <div class="hero">
         <div class="hero-logo">M</div>
         <div class="hero-name">MERIDIAN</div>
-        <div class="hero-subtitle">
-            Scholarship Applicant System
-        </div>
         <div class="hero-description">
             A structured system for identifying duplicate applications
             and generating a merit-based ordering.
