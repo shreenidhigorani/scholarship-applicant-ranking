@@ -12,34 +12,143 @@ from backend.similarity import calculate_similarity
 from backend.union_find import UnionFind
 from backend.relation_checker import strictly_dominates
 from backend.topo_sort import topological_sort
+# =============================================================
 # PAGE SETTINGS
+# =============================================================
 st.set_page_config(
     page_title="Meridian",
     page_icon="🎓",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+# =============================================================
 # CREATE DATABASE TABLES
+# =============================================================
 create_tables()
+# =============================================================
 # LOAD CUSTOM CSS
+# =============================================================
 css_file = Path(__file__).parent / "style.css"
 with open(css_file, "r", encoding="utf-8") as f:
     st.markdown(
         f"<style>{f.read()}</style>",
         unsafe_allow_html=True
     )
+# =============================================================
+# APP STATE
+# =============================================================
+if "started" not in st.session_state:
+    st.session_state["started"] = False
+# =============================================================
 # APP BAR
-st.markdown("""
-<div class="app-bar">
-    <div class="app-bar-logo">S</div>
-    <div class="app-bar-brand">
-        <span class="app-bar-name">Meridian</span>
-        <span class="app-bar-tagline">Duplicate detection &amp; merit ranking</span>
+# =============================================================
+if st.session_state["started"]:
+    st.markdown("""
+    <div class="app-bar">
+        <div class="app-bar-logo">M</div>
+        <div class="app-bar-brand">
+            <span class="app-bar-name">Meridian</span>
+            <span class="app-bar-tagline">
+                Duplicate detection &amp; merit ranking
+            </span>
+        </div>
     </div>
-</div>
-""", unsafe_allow_html=True)
-
+    """, unsafe_allow_html=True)
+# =============================================================
+# MERIDIAN HOME PAGE
+# =============================================================
+if not st.session_state["started"]:
+    st.markdown("""
+    <div class="hero">
+        <div class="hero-logo">M</div>
+        <div class="hero-name">MERIDIAN</div>
+        <div class="hero-subtitle">
+            Scholarship Applicant System
+        </div>
+        <div class="hero-description">
+            A structured system for identifying duplicate applications
+            and generating a merit-based ordering.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    # ---------------------------------------------------------
+    # HOME PAGE CARDS
+    # ---------------------------------------------------------
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown("""
+        <div class="home-card">
+            <div class="home-number">
+                01
+            </div>
+            <h3>
+                Identify
+            </h3>
+            <p>
+                Detect potentially duplicated applicant records
+                using similarity and equivalence classes.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    with col2:
+        st.markdown("""
+        <div class="home-card">
+            <div class="home-number">
+                02
+            </div>
+            <h3>
+                Compare
+            </h3>
+            <p>
+                Compare applicants using a multi-criteria
+                partial-order relation.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    with col3:
+        st.markdown("""
+        <div class="home-card">
+            <div class="home-number">
+                03
+            </div>
+            <h3>
+                Rank
+            </h3>
+            <p>
+                Generate an ordering that respects the
+                preference relationships between applicants.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    # ---------------------------------------------------------
+    # START BUTTON
+    # ---------------------------------------------------------
+    st.write("")
+    start_col1, start_col2, start_col3 = st.columns(
+        [1, 1, 1]
+    )
+    with start_col2:
+        if st.button(
+            "Begin Evaluation  →",
+            type="primary",
+            use_container_width=True
+        ):
+            st.session_state["started"] = True
+            st.rerun()
+    # ---------------------------------------------------------
+    # HOME PAGE FOOTER
+    # ---------------------------------------------------------
+    st.markdown("""
+    <div class="home-footer">
+        Discrete mathematics applied to scholarship evaluation
+    </div>
+    """, unsafe_allow_html=True)
+    # Stop here so the actual application does not
+    # appear underneath the homepage.
+    st.stop()
+# =============================================================
 # REQUIRED COLUMNS
+# =============================================================
 required_columns = [
     "name",
     "address",
@@ -49,22 +158,29 @@ required_columns = [
     "income_bracket",
     "distance_km"
 ]
-
-# SAMPLE CSV for download on landing page
+# =============================================================
+# SAMPLE CSV
+# =============================================================
 _SAMPLE_CSV = (
-    "name,address,phone,marks,category_priority,income_bracket,distance_km\n"
-    "Alice Kumar,12 MG Road Bengaluru,9876543210,85.5,1,2,12.3\n"
-    "Bob Sharma,45 Anna Nagar Chennai,9123456789,78.0,2,3,8.7\n"
-    "Carol Nair,7 Park Street Kolkata,9988776655,92.0,1,1,5.0\n"
+    "name,address,phone,marks,category_priority,"
+    "income_bracket,distance_km\n"
+    "Alice Kumar,12 MG Road Bengaluru,9876543210,"
+    "85.5,1,2,12.3\n"
+    "Bob Sharma,45 Anna Nagar Chennai,9123456789,"
+    "78.0,2,3,8.7\n"
+    "Carol Nair,7 Park Street Kolkata,9988776655,"
+    "92.0,1,1,5.0\n"
 )
-
+# =============================================================
 # UPLOAD & SETTINGS CARD
+# =============================================================
 st.markdown("""
 <div class="upload-card">
-    <div class="upload-card-title">📂 Load Applicant Data</div>
+    <div class="upload-card-title">
+        📂 Load Applicant Data
+    </div>
 </div>
 """, unsafe_allow_html=True)
-
 with st.container():
     uploaded_file = st.file_uploader(
         "Choose a CSV file",
@@ -94,8 +210,9 @@ with st.container():
     else:
         threshold = 0
         run_button = False
-
+# =============================================================
 # INTRODUCTION
+# =============================================================
 if uploaded_file is None:
     st.markdown(
         '<div class="section-title">Applicant Duplicate Checker</div>',
@@ -111,26 +228,30 @@ if uploaded_file is None:
         st.markdown("""
         <div class="info-card">
             <h3>📄 Upload</h3>
-            <p>Upload applicant records in CSV format.</p>
+            <p>
+                Upload applicant records in CSV format.
+            </p>
         </div>
         """, unsafe_allow_html=True)
     with col2:
         st.markdown("""
         <div class="info-card">
             <h3>🔍 Detect</h3>
-            <p>Compare applicant records using similarity measures.</p>
+            <p>
+                Compare applicant records using similarity measures.
+            </p>
         </div>
         """, unsafe_allow_html=True)
     with col3:
         st.markdown("""
         <div class="info-card">
             <h3>✓ Review</h3>
-            <p>Review suspected duplicate groups before ranking.</p>
+            <p>
+                Review suspected duplicate groups before ranking.
+            </p>
         </div>
         """, unsafe_allow_html=True)
-
     st.write("")
-    # Sample CSV download — below the info cards
     _dl_col, _ = st.columns([1, 2])
     with _dl_col:
         st.download_button(
@@ -139,12 +260,18 @@ if uploaded_file is None:
             file_name="sample_applicants.csv",
             mime="text/csv"
         )
-    st.caption("Use the sample file above to try the app with demo data.")
-
+    st.caption(
+        "Use the sample file above to try the app with demo data."
+    )
+# =============================================================
 # PROCESS UPLOADED FILE
+# =============================================================
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
-    with st.expander("Preview uploaded data", expanded=False):
+    with st.expander(
+        "Preview uploaded data",
+        expanded=False
+    ):
         st.dataframe(
             df,
             use_container_width=True,
@@ -165,6 +292,9 @@ if uploaded_file is not None:
             "Running similarity checks and building clusters..."
         ):
             clear_applicants()
+            # -------------------------------------------------
+            # INSERT APPLICANTS INTO DATABASE
+            # -------------------------------------------------
             for _, row in df.iterrows():
                 insert_applicant(
                     row["name"],
@@ -175,6 +305,9 @@ if uploaded_file is not None:
                     int(row["income_bracket"]),
                     float(row["distance_km"])
                 )
+            # -------------------------------------------------
+            # GET APPLICANTS FROM DATABASE
+            # -------------------------------------------------
             database_records = get_all_applicants()
             applicants = {}
             for record in database_records:
@@ -189,68 +322,118 @@ if uploaded_file is not None:
                     "income_bracket": record[6],
                     "distance_km": record[7]
                 }
+            # -------------------------------------------------
+            # UNION-FIND
+            # -------------------------------------------------
             applicant_ids = list(applicants.keys())
             uf = UnionFind(applicant_ids)
             pair_scores = {}
             ids = applicant_ids
+            # Compare every pair of applicants
             for i in range(len(ids)):
                 for j in range(i + 1, len(ids)):
                     id1 = ids[i]
                     id2 = ids[j]
                     applicant1 = applicants[id1]
                     applicant2 = applicants[id2]
+                    # Calculate similarity
                     score = calculate_similarity(
                         applicant1,
                         applicant2
                     )
                     pair_scores[(id1, id2)] = score
+                    # Connect records that meet threshold
                     if score >= threshold:
-                        uf.union(id1, id2)
+                        uf.union(
+                            id1,
+                            id2
+                        )
+            # -------------------------------------------------
+            # GET CLUSTERS
+            # -------------------------------------------------
             all_clusters = uf.get_clusters()
             duplicate_clusters = {}
             for cluster_id, members in all_clusters.items():
                 if len(members) > 1:
                     duplicate_clusters[cluster_id] = members
-            # Store Stage 1 data
+            # -------------------------------------------------
+            # STORE STAGE 1 DATA
+            # -------------------------------------------------
             st.session_state["applicants"] = applicants
-            st.session_state["duplicate_clusters"] = duplicate_clusters
+            st.session_state["duplicate_clusters"] = (
+                duplicate_clusters
+            )
             st.session_state["pair_scores"] = pair_scores
             st.session_state["decisions"] = {}
-            st.session_state["total_uploaded"] = len(applicant_ids)
-            # Reset Stage 2
+            st.session_state["total_uploaded"] = len(
+                applicant_ids
+            )
+            # -------------------------------------------------
+            # RESET STAGE 2
+            # -------------------------------------------------
             st.session_state["ranking_applicants"] = {}
             st.session_state["stage2_ranking"] = None
             st.session_state["stage2_graph"] = {}
             st.session_state["stage2_comparisons"] = []
-        st.success("Duplicate checking completed.")
+        st.success(
+            "Duplicate checking completed."
+        )
+# =============================================================
 # HELPER FUNCTION
+# =============================================================
 
 
-def cluster_average_score(members, pair_scores):
+def cluster_average_score(
+    members,
+    pair_scores
+):
     scores = []
     for i in range(len(members)):
         for j in range(i + 1, len(members)):
-            key = (members[i], members[j])
+            key = (
+                members[i],
+                members[j]
+            )
             if key not in pair_scores:
-                key = (members[j], members[i])
+                key = (
+                    members[j],
+                    members[i]
+                )
             if key in pair_scores:
-                scores.append(pair_scores[key])
+                scores.append(
+                    pair_scores[key]
+                )
     if not scores:
         return None
     return sum(scores) / len(scores)
 
 
+# =============================================================
 # STAGE 1 — DUPLICATE DETECTION
+# =============================================================
 if "duplicate_clusters" in st.session_state:
-    duplicate_clusters = st.session_state["duplicate_clusters"]
-    applicants = st.session_state["applicants"]
-    pair_scores = st.session_state["pair_scores"]
-    total_uploaded = st.session_state["total_uploaded"]
-    decisions = st.session_state["decisions"]
+    duplicate_clusters = (
+        st.session_state["duplicate_clusters"]
+    )
+    applicants = (
+        st.session_state["applicants"]
+    )
+    pair_scores = (
+        st.session_state["pair_scores"]
+    )
+    total_uploaded = (
+        st.session_state["total_uploaded"]
+    )
+    decisions = (
+        st.session_state["decisions"]
+    )
     st.markdown(
         '<div class="section-title">Duplicate Detection</div>',
         unsafe_allow_html=True
     )
+    # ---------------------------------------------------------
+    # DECISION COUNTS
+    # ---------------------------------------------------------
     confirmed_duplicate = sum(
         1
         for decision in decisions.values()
@@ -266,25 +449,51 @@ if "duplicate_clusters" in st.session_state:
         - confirmed_duplicate
         - confirmed_distinct
     )
+    # ---------------------------------------------------------
+    # METRIC CARDS
+    # ---------------------------------------------------------
     m1, m2, m3, m4 = st.columns(4)
     metric_data = [
-        (m1, total_uploaded, "Applicants uploaded"),
-        (m2, len(duplicate_clusters), "Clusters found"),
-        (m3, pending, "Pending review"),
-        (m4, confirmed_duplicate, "Confirmed duplicate")
+        (
+            m1,
+            total_uploaded,
+            "Applicants uploaded"
+        ),
+        (
+            m2,
+            len(duplicate_clusters),
+            "Clusters found"
+        ),
+        (
+            m3,
+            pending,
+            "Pending review"
+        ),
+        (
+            m4,
+            confirmed_duplicate,
+            "Confirmed duplicate"
+        )
     ]
     for col, value, label in metric_data:
         with col:
             st.markdown(
                 f"""
                 <div class="metric-card">
-                    <div class="metric-value">{value}</div>
-                    <div class="metric-label">{label}</div>
+                    <div class="metric-value">
+                        {value}
+                    </div>
+                    <div class="metric-label">
+                        {label}
+                    </div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
     st.write("")
+    # ---------------------------------------------------------
+    # NO CLUSTERS
+    # ---------------------------------------------------------
     if len(duplicate_clusters) == 0:
         st.success(
             "✓ No suspected duplicate clusters were found."
@@ -297,7 +506,9 @@ if "duplicate_clusters" in st.session_state:
                 "Resolved"
             ]
         )
-        # RENDER CLUSTER]
+        # -----------------------------------------------------
+        # RENDER CLUSTER
+        # -----------------------------------------------------
 
         def render_cluster(
             cluster_number,
@@ -319,7 +530,9 @@ if "duplicate_clusters" in st.session_state:
             st.markdown(
                 f"""
                 <div class="cluster-card">
-                    <h3>Cluster {cluster_number}</h3>
+                    <h3>
+                        Cluster {cluster_number}
+                    </h3>
                     <p>
                         {len(members)}
                         records connected by the similarity rule.
@@ -329,18 +542,28 @@ if "duplicate_clusters" in st.session_state:
                 """,
                 unsafe_allow_html=True
             )
+            # -------------------------------------------------
+            # CLUSTER RECORDS
+            # -------------------------------------------------
             with st.expander(
                 "View records in this cluster"
             ):
                 cluster_data = []
                 for applicant_id in members:
-                    applicant = applicants[applicant_id]
+                    applicant = applicants[
+                        applicant_id
+                    ]
                     cluster_data.append({
-                        "ID": applicant["id"],
-                        "Name": applicant["name"],
-                        "Address": applicant["address"],
-                        "Phone": applicant["phone"],
-                        "Marks": applicant["marks"],
+                        "ID":
+                            applicant["id"],
+                        "Name":
+                            applicant["name"],
+                        "Address":
+                            applicant["address"],
+                        "Phone":
+                            applicant["phone"],
+                        "Marks":
+                            applicant["marks"],
                         "Category Priority":
                             applicant["category_priority"],
                         "Income Bracket":
@@ -356,12 +579,18 @@ if "duplicate_clusters" in st.session_state:
                     use_container_width=True,
                     hide_index=True
                 )
+            # -------------------------------------------------
+            # DECISION BUTTONS
+            # -------------------------------------------------
             col1, col2 = st.columns(2)
-            # DUPLICATE BUTTON
             with col1:
                 if st.button(
                     "✓ Confirm as Duplicate",
-                    key=f"duplicate_{tab_name}_{cluster_id}",
+                    key=(
+                        f"duplicate_"
+                        f"{tab_name}_"
+                        f"{cluster_id}"
+                    ),
                     use_container_width=True
                 ):
                     st.session_state["decisions"][
@@ -372,11 +601,14 @@ if "duplicate_clusters" in st.session_state:
                         "duplicate"
                     )
                     st.rerun()
-            # DISTINCT BUTTON
             with col2:
                 if st.button(
                     "✕ Mark as Distinct",
-                    key=f"distinct_{tab_name}_{cluster_id}",
+                    key=(
+                        f"distinct_"
+                        f"{tab_name}_"
+                        f"{cluster_id}"
+                    ),
                     use_container_width=True
                 ):
                     st.session_state["decisions"][
@@ -387,9 +619,13 @@ if "duplicate_clusters" in st.session_state:
                         "distinct"
                     )
                     st.rerun()
+            # -------------------------------------------------
             # STATUS
+            # -------------------------------------------------
             if cluster_id in decisions:
-                decision = decisions[cluster_id]
+                decision = decisions[
+                    cluster_id
+                ]
                 if decision == "duplicate":
                     st.markdown(
                         '<span class="status-pill-duplicate">'
@@ -412,13 +648,20 @@ if "duplicate_clusters" in st.session_state:
                     unsafe_allow_html=True
                 )
             st.write("")
+        # -----------------------------------------------------
         # CLUSTER LIST
+        # -----------------------------------------------------
         cluster_items = list(
             duplicate_clusters.items()
         )
+        # -----------------------------------------------------
         # ALL CLUSTERS
+        # -----------------------------------------------------
         with tab_all:
-            for idx, (cluster_id, members) in enumerate(
+            for idx, (
+                cluster_id,
+                members
+            ) in enumerate(
                 cluster_items,
                 start=1
             ):
@@ -428,10 +671,15 @@ if "duplicate_clusters" in st.session_state:
                     members,
                     "all"
                 )
+        # -----------------------------------------------------
         # PENDING CLUSTERS
+        # -----------------------------------------------------
         with tab_pending:
             any_pending = False
-            for idx, (cluster_id, members) in enumerate(
+            for idx, (
+                cluster_id,
+                members
+            ) in enumerate(
                 cluster_items,
                 start=1
             ):
@@ -447,10 +695,15 @@ if "duplicate_clusters" in st.session_state:
                 st.info(
                     "No clusters left to review."
                 )
+        # -----------------------------------------------------
         # RESOLVED CLUSTERS
+        # -----------------------------------------------------
         with tab_resolved:
             any_resolved = False
-            for idx, (cluster_id, members) in enumerate(
+            for idx, (
+                cluster_id,
+                members
+            ) in enumerate(
                 cluster_items,
                 start=1
             ):
@@ -466,39 +719,63 @@ if "duplicate_clusters" in st.session_state:
                 st.info(
                     "No clusters resolved yet."
                 )
+        # -----------------------------------------------------
         # DOWNLOAD DECISIONS
+        # -----------------------------------------------------
         if decisions:
             rows = []
-            for cluster_id, members in duplicate_clusters.items():
+            for cluster_id, members in (
+                duplicate_clusters.items()
+            ):
                 decision = decisions.get(
                     cluster_id,
                     "pending"
                 )
                 for applicant_id in members:
                     rows.append({
-                        "cluster_id": cluster_id,
-                        "applicant_id": applicant_id,
-                        "name": applicants[applicant_id]["name"],
-                        "decision": decision
+                        "cluster_id":
+                            cluster_id,
+                        "applicant_id":
+                            applicant_id,
+                        "name":
+                            applicants[
+                                applicant_id
+                            ]["name"],
+                        "decision":
+                            decision
                     })
-            decisions_df = pd.DataFrame(rows)
+            decisions_df = pd.DataFrame(
+                rows
+            )
             st.download_button(
                 "⬇ Download decisions as CSV",
-                data=decisions_df.to_csv(index=False),
+                data=decisions_df.to_csv(
+                    index=False
+                ),
                 file_name="cluster_decisions.csv",
                 mime="text/csv",
                 use_container_width=True
             )
-# STAGE 2 — MERIT Evaluation
+# =============================================================
+# STAGE 2 — MERIT EVALUATION
+# =============================================================
 if "duplicate_clusters" in st.session_state:
     st.markdown(
         '<div class="section-title">Merit Evaluation</div>',
         unsafe_allow_html=True
     )
-    duplicate_clusters = st.session_state["duplicate_clusters"]
-    applicants = st.session_state["applicants"]
-    decisions = st.session_state["decisions"]
+    duplicate_clusters = (
+        st.session_state["duplicate_clusters"]
+    )
+    applicants = (
+        st.session_state["applicants"]
+    )
+    decisions = (
+        st.session_state["decisions"]
+    )
+    # ---------------------------------------------------------
     # CHECK FOR PENDING CLUSTERS
+    # ---------------------------------------------------------
     pending_clusters = [
         cluster_id
         for cluster_id in duplicate_clusters
@@ -510,56 +787,104 @@ if "duplicate_clusters" in st.session_state:
             "before starting the merit evaluation."
         )
     else:
+        # -----------------------------------------------------
         # BUILD RANKING APPLICANTS
-        # For a confirmed duplicate cluster, keep the first
-        # applicant as the representative and remove the
-        # remaining duplicate records.
+        # -----------------------------------------------------
         duplicate_applicant_ids = set()
-        for cluster_id, members in duplicate_clusters.items():
-            if decisions.get(cluster_id) == "duplicate":
-                members_sorted = sorted(members)
-                for applicant_id in members_sorted[1:]:
-                    duplicate_applicant_ids.add(applicant_id)
+        for cluster_id, members in (
+            duplicate_clusters.items()
+        ):
+            if decisions.get(
+                cluster_id
+            ) == "duplicate":
+                members_sorted = sorted(
+                    members
+                )
+                for applicant_id in (
+                    members_sorted[1:]
+                ):
+                    duplicate_applicant_ids.add(
+                        applicant_id
+                    )
         ranking_applicants = {}
-        for applicant_id, applicant in applicants.items():
-            if applicant_id not in duplicate_applicant_ids:
-                ranking_applicants[applicant_id] = applicant
-        # Keep the applicants available after Streamlit reruns.
-        st.session_state["ranking_applicants"] = ranking_applicants
-
-        # STAGE 2 METRIC CARDS (read-only, display only)
-        _comparisons_for_metrics = st.session_state.get(
-            "stage2_comparisons", []
+        for applicant_id, applicant in (
+            applicants.items()
+        ):
+            if applicant_id not in (
+                duplicate_applicant_ids
+            ):
+                ranking_applicants[
+                    applicant_id
+                ] = applicant
+        # Keep applicants available after reruns
+        st.session_state[
+            "ranking_applicants"
+        ] = ranking_applicants
+        # -----------------------------------------------------
+        # STAGE 2 METRIC CARDS
+        # -----------------------------------------------------
+        _comparisons_for_metrics = (
+            st.session_state.get(
+                "stage2_comparisons",
+                []
+            )
         )
-        _eligible_count = len(ranking_applicants)
+        _eligible_count = len(
+            ranking_applicants
+        )
         _comparable_count = sum(
-            1 for _r in _comparisons_for_metrics
-            if _r.get("Result", "") != "Incomparable"
+            1
+            for _r in _comparisons_for_metrics
+            if _r.get(
+                "Result",
+                ""
+            ) != "Incomparable"
         )
         _incomparable_count = sum(
-            1 for _r in _comparisons_for_metrics
-            if _r.get("Result", "") == "Incomparable"
+            1
+            for _r in _comparisons_for_metrics
+            if _r.get(
+                "Result",
+                ""
+            ) == "Incomparable"
         )
         _s2m1, _s2m2, _s2m3 = st.columns(3)
         _s2_metrics = [
-            (_s2m1, _eligible_count, "Eligible applicants"),
-            (_s2m2, _comparable_count, "Comparable pairs"),
-            (_s2m3, _incomparable_count, "Incomparable pairs"),
+            (
+                _s2m1,
+                _eligible_count,
+                "Eligible applicants"
+            ),
+            (
+                _s2m2,
+                _comparable_count,
+                "Comparable pairs"
+            ),
+            (
+                _s2m3,
+                _incomparable_count,
+                "Incomparable pairs"
+            )
         ]
         for _col, _val, _lbl in _s2_metrics:
             with _col:
                 st.markdown(
                     f"""
                     <div class="metric-card">
-                        <div class="metric-value">{_val}</div>
-                        <div class="metric-label">{_lbl}</div>
+                        <div class="metric-value">
+                            {_val}
+                        </div>
+                        <div class="metric-label">
+                            {_lbl}
+                        </div>
                     </div>
                     """,
                     unsafe_allow_html=True
                 )
         st.write("")
-
+        # -----------------------------------------------------
         # ELIGIBLE APPLICANTS
+        # -----------------------------------------------------
         st.markdown(
             "### 📋 Applicants Entering Merit Evaluation"
         )
@@ -568,35 +893,53 @@ if "duplicate_clusters" in st.session_state:
             f"**{len(ranking_applicants)}**"
         )
         eligible_data = []
-        for display_id, (applicant_id, applicant) in enumerate(
+        for display_id, (
+            applicant_id,
+            applicant
+        ) in enumerate(
             ranking_applicants.items(),
             start=1
         ):
             eligible_data.append({
-                "Applicant No.": display_id,
-                "Name": applicant["name"],
-                "Marks": applicant["marks"],
+                "Applicant No.":
+                    display_id,
+                "Name":
+                    applicant["name"],
+                "Marks":
+                    applicant["marks"],
                 "Category Priority":
-                    applicant["category_priority"],
+                    applicant[
+                        "category_priority"
+                    ],
                 "Income Bracket":
-                    applicant["income_bracket"],
+                    applicant[
+                        "income_bracket"
+                    ],
                 "Distance (km)":
-                    applicant["distance_km"]
+                    applicant[
+                        "distance_km"
+                    ]
             })
-        eligible_df = pd.DataFrame(eligible_data)
+        eligible_df = pd.DataFrame(
+            eligible_data
+        )
         st.dataframe(
             eligible_df,
             use_container_width=True,
             hide_index=True
         )
+        # -----------------------------------------------------
         # NEED AT LEAST TWO APPLICANTS
+        # -----------------------------------------------------
         if len(ranking_applicants) < 2:
             st.warning(
                 "At least two applicants are required "
                 "to create a merit evaluation."
             )
         else:
+            # -------------------------------------------------
             # GENERATE MERIT EVALUATION
+            # -------------------------------------------------
             evaluation_button = st.button(
                 "Generate Merit Evaluation",
                 type="primary",
@@ -604,67 +947,102 @@ if "duplicate_clusters" in st.session_state:
             )
             if evaluation_button:
                 with st.spinner(
-                    "Building Applicant Preference Analysis and preference relations..."
+                    "Building Applicant Preference Analysis "
+                    "and preference relations..."
                 ):
                     graph = {}
                     applicant_ids = list(
                         ranking_applicants.keys()
                     )
-                    # Create an empty adjacency list.
+                    # Create empty adjacency list
                     for applicant_id in applicant_ids:
-                        graph[applicant_id] = []
-                    # Applicant Preference Analysis
+                        graph[
+                            applicant_id
+                        ] = []
+                    # -------------------------------------------------
+                    # PAIRWISE COMPARISON
+                    # -------------------------------------------------
                     comparison_rows = []
-                    for i in range(len(applicant_ids)):
-                        for j in range(i + 1, len(applicant_ids)):
+                    for i in range(
+                        len(applicant_ids)
+                    ):
+                        for j in range(
+                            i + 1,
+                            len(applicant_ids)
+                        ):
                             id1 = applicant_ids[i]
                             id2 = applicant_ids[j]
-                            applicant1 = ranking_applicants[id1]
-                            applicant2 = ranking_applicants[id2]
+                            applicant1 = (
+                                ranking_applicants[id1]
+                            )
+                            applicant2 = (
+                                ranking_applicants[id2]
+                            )
                             if strictly_dominates(
                                 applicant1,
                                 applicant2
                             ):
-                                graph[id1].append(id2)
+                                graph[id1].append(
+                                    id2
+                                )
                                 result = (
-                                    f"{applicant1['name']} is preferred to "
+                                    f"{applicant1['name']} "
+                                    f"is preferred to "
                                     f"{applicant2['name']}"
                                 )
                             elif strictly_dominates(
                                 applicant2,
                                 applicant1
                             ):
-                                graph[id2].append(id1)
+                                graph[id2].append(
+                                    id1
+                                )
                                 result = (
-                                    f"{applicant2['name']} is preferred to "
+                                    f"{applicant2['name']} "
+                                    f"is preferred to "
                                     f"{applicant1['name']}"
                                 )
                             else:
-                                result = "Incomparable"
+                                result = (
+                                    "Incomparable"
+                                )
                             comparison_rows.append({
                                 "Applicant A":
                                     applicant1["name"],
                                 "Applicant B":
                                     applicant2["name"],
-                                "Result": result
+                                "Result":
+                                    result
                             })
-                    st.session_state["stage2_graph"] = graph
-                    st.session_state["stage2_comparisons"] = (
-                        comparison_rows
-                    )
-                    st.session_state["stage2_ranking"] = None
+                    st.session_state[
+                        "stage2_graph"
+                    ] = graph
+                    st.session_state[
+                        "stage2_comparisons"
+                    ] = comparison_rows
+                    st.session_state[
+                        "stage2_ranking"
+                    ] = None
                 st.rerun()
-            # SHOW RESULTS ONLY AFTER EVALUATION IS GENERATED
-            comparisons = st.session_state.get(
-                "stage2_comparisons",
-                []
+            # -------------------------------------------------
+            # SHOW RESULTS
+            # -------------------------------------------------
+            comparisons = (
+                st.session_state.get(
+                    "stage2_comparisons",
+                    []
+                )
             )
-            graph = st.session_state.get(
-                "stage2_graph",
-                {}
+            graph = (
+                st.session_state.get(
+                    "stage2_graph",
+                    {}
+                )
             )
             if comparisons:
-                # 1. PAIRWISE COMPARISON TABLE
+                # ---------------------------------------------
+                # PAIRWISE COMPARISON TABLE
+                # ---------------------------------------------
                 st.markdown("---")
                 st.markdown(
                     "### 1. Applicant Preference Analysis"
@@ -681,17 +1059,27 @@ if "duplicate_clusters" in st.session_state:
                     use_container_width=True,
                     hide_index=True
                 )
-                # 2. PREFERENCE RELATIONS
+                # ---------------------------------------------
+                # PREFERENCE RELATIONS
+                # ---------------------------------------------
                 st.markdown(
                     "### 2. Preference Relations"
                 )
                 preference_rows = []
-                for source_id, targets in graph.items():
-                    source = ranking_applicants.get(source_id)
+                for source_id, targets in (
+                    graph.items()
+                ):
+                    source = ranking_applicants.get(
+                        source_id
+                    )
                     if source is None:
                         continue
                     for target_id in targets:
-                        target = ranking_applicants.get(target_id)
+                        target = (
+                            ranking_applicants.get(
+                                target_id
+                            )
+                        )
                         if target is None:
                             continue
                         preference_rows.append({
@@ -699,7 +1087,8 @@ if "duplicate_clusters" in st.session_state:
                                 source["name"],
                             "Less Preferred Applicant":
                                 target["name"],
-                            "Relation": "→"
+                            "Relation":
+                                "→"
                         })
                 if preference_rows:
                     preference_df = pd.DataFrame(
@@ -716,7 +1105,9 @@ if "duplicate_clusters" in st.session_state:
                         "under the current criteria. The applicants "
                         "are therefore incomparable."
                     )
-                # 3. Preference Graph
+                # ---------------------------------------------
+                # PREFERENCE GRAPH
+                # ---------------------------------------------
                 st.markdown(
                     "### 3. Preference Graph"
                 )
@@ -730,16 +1121,34 @@ if "duplicate_clusters" in st.session_state:
                 digraph {
                     rankdir=LR;
                     bgcolor="#E9EEF6";
-                    node [shape=box, style="filled,rounded", fillcolor="#FFFFFF", color="#1E3A8A", fontcolor="#1F2937", fontname="Inter", penwidth=1.5];
-                    edge [color="#64748B", penwidth=1.2, arrowsize=0.8];
+                    node [
+                        shape=box,
+                        style="filled,rounded",
+                        fillcolor="#FFFFFF",
+                        color="#1E3A8A",
+                        fontcolor="#1F2937",
+                        fontname="Inter",
+                        penwidth=1.5
+                    ];
+                    edge [
+                        color="#64748B",
+                        penwidth=1.2,
+                        arrowsize=0.8
+                    ];
                 """
                 for applicant_id, applicant in (
                     ranking_applicants.items()
                 ):
                     safe_name = (
                         str(applicant["name"])
-                        .replace("\\", "\\\\")
-                        .replace('"', '\\"')
+                        .replace(
+                            "\\",
+                            "\\\\"
+                        )
+                        .replace(
+                            '"',
+                            '\\"'
+                        )
                     )
                     dot += (
                         f'"{applicant_id}" '
@@ -761,7 +1170,9 @@ if "duplicate_clusters" in st.session_state:
                     "list in Python. Graphviz is used only to display "
                     "the graph."
                 )
-                # GENERATE FINAL RANKING
+                # ---------------------------------------------
+                # FINAL RANKING
+                # ---------------------------------------------
                 st.markdown("---")
                 final_button = st.button(
                     "Generate Final Merit Ranking 🏆",
@@ -769,23 +1180,37 @@ if "duplicate_clusters" in st.session_state:
                     use_container_width=True
                 )
                 if final_button:
-                    ranking = topological_sort(graph)
+                    ranking = topological_sort(
+                        graph
+                    )
                     if ranking is None:
-                        st.session_state["stage2_ranking"] = None
+                        st.session_state[
+                            "stage2_ranking"
+                        ] = None
                         st.error(
                             "A cycle was detected in the dominance "
                             "graph. A valid topological ranking could "
                             "not be created."
                         )
                     else:
-                        st.session_state["stage2_ranking"] = ranking
+                        st.session_state[
+                            "stage2_ranking"
+                        ] = ranking
                         st.rerun()
+# =============================================================
 # DISPLAY FINAL MERIT RANKING
-if st.session_state.get("stage2_ranking") is not None:
-    ranking = st.session_state["stage2_ranking"]
-    ranking_applicants = st.session_state.get(
-        "ranking_applicants",
-        {}
+# =============================================================
+if st.session_state.get(
+    "stage2_ranking"
+) is not None:
+    ranking = st.session_state[
+        "stage2_ranking"
+    ]
+    ranking_applicants = (
+        st.session_state.get(
+            "ranking_applicants",
+            {}
+        )
     )
     st.markdown(
         '<div class="section-title">Final Merit Ranking</div>',
@@ -805,43 +1230,63 @@ if st.session_state.get("stage2_ranking") is not None:
         )
         if applicant is not None:
             ranking_rows.append({
-                "Rank": position,
-                "Applicant": applicant["name"],
-                "Marks": applicant["marks"],
+                "Rank":
+                    position,
+                "Applicant":
+                    applicant["name"],
+                "Marks":
+                    applicant["marks"],
                 "Category Priority":
-                    applicant["category_priority"],
+                    applicant[
+                        "category_priority"
+                    ],
                 "Income Bracket":
-                    applicant["income_bracket"],
+                    applicant[
+                        "income_bracket"
+                    ],
                 "Distance (km)":
-                    applicant["distance_km"]
+                    applicant[
+                        "distance_km"
+                    ]
             })
     ranking_df = pd.DataFrame(
         ranking_rows
     )
+    # ---------------------------------------------------------
+    # HIGHLIGHT TOP 3
+    # ---------------------------------------------------------
 
-    # DISPLAY COPY with top-3 highlight (ranking_df unchanged)
     def _highlight_top3(row):
         if row["Rank"] <= 3:
             return [
-                "background-color: #EFF6FF; color: #1E3A8A; font-weight: 600;"
+                "background-color: #EFF6FF; "
+                "color: #1E3A8A; "
+                "font-weight: 600;"
             ] * len(row)
-        return [""] * len(row)
-
-    _ranking_display = ranking_df.style.apply(_highlight_top3, axis=1)
+        return [
+            ""
+        ] * len(row)
+    _ranking_display = ranking_df.style.apply(
+        _highlight_top3,
+        axis=1
+    )
     st.dataframe(
         _ranking_display,
         use_container_width=True,
         hide_index=True
     )
-
     st.download_button(
         "⬇ Download Merit Ranking",
-        data=ranking_df.to_csv(index=False),
+        data=ranking_df.to_csv(
+            index=False
+        ),
         file_name="merit_ranking.csv",
         mime="text/csv",
         use_container_width=True
     )
+# =============================================================
 # FOOTER
+# =============================================================
 st.markdown("""
 <div class="footer">
     Meridian &bull; Built by Shreenidhi Gorani

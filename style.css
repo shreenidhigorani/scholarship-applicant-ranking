@@ -1,15 +1,18 @@
 /* =============================================================
    Meridian — style.css
-   LIGHT MODE ONLY  |  Palette: navy #1E3A8A on cool blue-grey #E9EEF6
+   LIGHT MODE ONLY
    ============================================================= */
-
-/* ---------- Google Font ---------- */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
-
-/* ---------- Palette tokens + light colour-scheme ---------- */
+/* =============================================================
+   GOOGLE FONT
+   ============================================================= */
+@import url(
+  "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+);
+/* =============================================================
+   PALETTE
+   ============================================================= */
 :root {
   color-scheme: light;
-
   --bg-page: #e9eef6;
   --bg-surface: #ffffff;
   --bg-alt: #f4f7fb;
@@ -21,51 +24,50 @@
   --text-muted: #64748b;
   --text-on-pri: #ffffff;
   --radius: 12px;
-  --shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.06);
-  --shadow-hover: 0 4px 16px rgba(15, 23, 42, 0.14);
+  --shadow:
+    0 1px 3px rgba(15, 23, 42, 0.08),
+    0 4px 12px rgba(15, 23, 42, 0.06);
+  --shadow-hover:
+    0 4px 16px rgba(15, 23, 42, 0.14);
 }
-
-/* ---------- Base ---------- */
+/* =============================================================
+   BASE
+   ============================================================= */
 html,
 body {
   font-family: "Inter", system-ui, sans-serif;
   color: var(--text-body);
   background-color: var(--bg-page) !important;
 }
-
 .stApp {
   background-color: var(--bg-page) !important;
 }
-
 .block-container {
   max-width: 1100px !important;
-  /* push content below fixed app bar */
-  padding-top: 4.5rem !important;
+  padding-top: 2rem !important;
   padding-bottom: 4rem !important;
 }
-
 /* =============================================================
    HIDE STREAMLIT CHROME
    ============================================================= */
-
 #MainMenu,
 header[data-testid="stHeader"],
 footer[data-testid="stAppViewFooter"],
 footer {
   display: none !important;
 }
-
+/* =============================================================
+   HIDE SIDEBAR
+   ============================================================= */
 section[data-testid="stSidebar"],
 button[data-testid="stSidebarCollapseButton"],
 button[data-testid="stSidebarExpandButton"],
 [data-testid="collapsedControl"] {
   display: none !important;
 }
-
 /* =============================================================
-   TOP APP BAR  (fixed, full-width, navy)
+   TOP APP BAR
    ============================================================= */
-
 .app-bar {
   position: fixed;
   top: 0;
@@ -78,15 +80,17 @@ button[data-testid="stSidebarExpandButton"],
   align-items: center;
   padding: 0 36px;
   gap: 14px;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.18);
+  box-shadow:
+    0 2px 10px rgba(15, 23, 42, 0.18);
 }
-
 .app-bar-logo {
   width: 34px;
   height: 34px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.18);
-  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border:
+    1.5px solid
+    rgba(255, 255, 255, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -97,13 +101,11 @@ button[data-testid="stSidebarExpandButton"],
   flex-shrink: 0;
   letter-spacing: -0.5px;
 }
-
 .app-bar-brand {
   display: flex;
   flex-direction: column;
   gap: 1px;
 }
-
 .app-bar-name {
   font-family: Georgia, serif;
   font-size: 18px;
@@ -112,7 +114,6 @@ button[data-testid="stSidebarExpandButton"],
   letter-spacing: -0.2px;
   line-height: 1;
 }
-
 .app-bar-tagline {
   font-family: "Inter", system-ui, sans-serif;
   font-size: 11px;
@@ -121,437 +122,715 @@ button[data-testid="stSidebarExpandButton"],
   letter-spacing: 0.02em;
   line-height: 1;
 }
-
 /* =============================================================
-   SHARED CARD STYLE
+   MERIDIAN HOME PAGE
    ============================================================= */
-
-.upload-card,
-.metric-card,
-.info-card,
-.cluster-card {
+.hero {
+  text-align: center;
+  padding:
+    70px 20px 45px;
+}
+.hero-logo {
+  width: 64px;
+  height: 64px;
+  margin:
+    0 auto 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: var(--primary);
+  color: white;
+  font-family: Georgia, serif;
+  font-size: 32px;
+  font-weight: 700;
+  box-shadow:
+    0 8px 22px
+    rgba(30, 58, 138, 0.20);
+}
+.hero-name {
+  font-family: Georgia, serif;
+  font-size: 52px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  line-height: 1;
+}
+.hero-subtitle {
+  margin-top: 12px;
+  font-family:
+    "Inter",
+    system-ui,
+    sans-serif;
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--text-body);
+}
+.hero-description {
+  max-width: 620px;
+  margin:
+    18px auto 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+/* =============================================================
+   HOME PAGE CARDS
+   ============================================================= */
+.home-card {
+  height: 238px;
+  min-height: 238px;
+  box-sizing: border-box;
+  padding: 28px 24px;
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  text-align: center;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-
+.home-card:hover {
+  transform:
+    translateY(-3px);
+  box-shadow:
+    var(--shadow-hover);
+}
+.home-number {
+  font-family:
+    "Inter",
+    system-ui,
+    sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color:
+    var(--primary);
+  margin-bottom: 14px;
+}
+.home-card h3 {
+  margin:
+    0 0 9px;
+  font-family:
+    Georgia,
+    serif;
+  font-size: 19px;
+  font-weight: 700;
+  color:
+    var(--primary);
+}
+.home-card p {
+  margin: 0;
+  color:
+    var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+/* =============================================================
+   HOME FOOTER
+   ============================================================= */
+.home-footer {
+  text-align: center;
+  margin-top: 38px;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  color:
+    var(--text-muted);
+}
+/* =============================================================
+   SHARED CARD STYLE
+   ============================================================= */
+.upload-card,
+.metric-card,
+.info-card,
+.cluster-card {
+  background:
+    var(--bg-surface);
+  border:
+    1px solid
+    var(--border);
+  border-radius:
+    var(--radius);
+  box-shadow:
+    var(--shadow);
+}
 /* =============================================================
    UPLOAD SETTINGS CARD
    ============================================================= */
-
 .upload-card {
-  padding: 22px 24px 0 24px;
-  margin-bottom: 0;
+  padding:
+    22px 24px 0;
+  margin-bottom:
+    0;
 }
-
 .upload-card-title {
-  font-family: Georgia, serif;
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 14px;
+  font-family:
+    Georgia,
+    serif;
+  font-size:
+    17px;
+  font-weight:
+    700;
+  color:
+    var(--primary);
+  margin-bottom:
+    14px;
 }
-
 /* =============================================================
    SECTION TITLES
    ============================================================= */
-
 .section-title {
-  font-family: Georgia, serif;
-  font-size: 21px;
-  font-weight: 700;
-  color: var(--primary);
-  margin-top: 40px;
-  margin-bottom: 18px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--border);
+  font-family:
+    Georgia,
+    serif;
+  font-size:
+    21px;
+  font-weight:
+    700;
+  color:
+    var(--primary);
+  margin-top:
+    40px;
+  margin-bottom:
+    18px;
+  padding-bottom:
+    10px;
+  border-bottom:
+    2px solid
+    var(--border);
 }
-
 /* =============================================================
    METRIC CARDS
    ============================================================= */
-
 .metric-card {
-  padding: 22px 16px;
-  text-align: center;
+  padding:
+    22px 16px;
+  text-align:
+    center;
   transition:
     transform 0.15s ease,
     box-shadow 0.15s ease;
 }
-
 .metric-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-hover);
+  transform:
+    translateY(-2px);
+  box-shadow:
+    var(--shadow-hover);
 }
-
 .metric-card .metric-value {
-  font-family: "Inter", system-ui, sans-serif;
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--primary);
-  line-height: 1;
+  font-family:
+    "Inter",
+    system-ui,
+    sans-serif;
+  font-size:
+    36px;
+  font-weight:
+    700;
+  color:
+    var(--primary);
+  line-height:
+    1;
 }
-
 .metric-card .metric-label {
-  font-family: "Inter", system-ui, sans-serif;
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 7px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  font-family:
+    "Inter",
+    system-ui,
+    sans-serif;
+  font-size:
+    11px;
+  color:
+    var(--text-muted);
+  margin-top:
+    7px;
+  font-weight:
+    600;
+  text-transform:
+    uppercase;
+  letter-spacing:
+    0.06em;
 }
-
 /* =============================================================
-   INFO CARDS  (landing page — friendly empty-state style)
+   INFO CARDS
    ============================================================= */
-
-/* Equal-height columns */
 [data-testid="stHorizontalBlock"] {
-  align-items: stretch !important;
+  align-items:
+    stretch !important;
 }
-
-/* Propagate height through every Streamlit wrapper div in a column */
-[data-testid="stColumn"],
-[data-testid="stColumn"] > div,
-[data-testid="stColumn"] > div > div,
-[data-testid="stColumn"] > div > div > div {
-  height: 100%;
-}
-
 .info-card {
-  padding: 28px 20px 28px;
-  margin-bottom: 0;
-  text-align: center;
+  padding:
+    28px 20px;
+  margin-bottom:
+    0;
+  text-align:
+    center;
   transition:
     transform 0.15s ease,
     box-shadow 0.15s ease;
-  /* guaranteed minimum so all three are the same size */
-  min-height: 170px;
-  height: 100%;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  min-height:
+    170px;
+  height:
+    100%;
+  box-sizing:
+    border-box;
+  display:
+    flex;
+  flex-direction:
+    column;
+  justify-content:
+    center;
 }
-
 .info-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-hover);
+  transform:
+    translateY(-3px);
+  box-shadow:
+    var(--shadow-hover);
 }
-
-.info-card .info-card-icon {
-  font-size: 28px;
-  margin-bottom: 10px;
-  line-height: 1;
-}
-
 .info-card h3 {
-  margin: 0 0 8px;
-  font-family: Georgia, serif;
-  color: var(--primary);
-  font-size: 16px;
-  font-weight: 700;
+  margin:
+    0 0 8px;
+  font-family:
+    Georgia,
+    serif;
+  color:
+    var(--primary);
+  font-size:
+    16px;
+  font-weight:
+    700;
 }
-
 .info-card p {
-  color: var(--text-muted);
-  font-size: 13.5px;
-  line-height: 1.55;
-  margin: 0;
+  color:
+    var(--text-muted);
+  font-size:
+    13.5px;
+  line-height:
+    1.55;
+  margin:
+    0;
 }
-
 /* =============================================================
    CLUSTER CARDS
    ============================================================= */
-
 .cluster-card {
-  padding: 18px 22px;
-  border-left: 5px solid var(--primary);
-  margin-top: 16px;
-  margin-bottom: 10px;
+  padding:
+    18px 22px;
+  border-left:
+    5px solid
+    var(--primary);
+  margin-top:
+    16px;
+  margin-bottom:
+    10px;
 }
-
 .cluster-card h3 {
-  margin: 0 0 4px;
-  font-family: Georgia, serif;
-  color: var(--primary);
-  font-size: 16px;
-  font-weight: 700;
+  margin:
+    0 0 4px;
+  font-family:
+    Georgia,
+    serif;
+  color:
+    var(--primary);
+  font-size:
+    16px;
+  font-weight:
+    700;
 }
-
 .cluster-card p {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 13.5px;
+  margin:
+    0;
+  color:
+    var(--text-muted);
+  font-size:
+    13.5px;
 }
-
 /* =============================================================
    SCORE PILL
    ============================================================= */
-
 .score-pill {
-  display: inline-block;
-  background: var(--primary-tint);
-  color: var(--primary);
-  font-family: "Inter", system-ui, sans-serif;
-  font-size: 11.5px;
-  font-weight: 600;
-  padding: 3px 12px;
-  border-radius: 20px;
-  margin-top: 8px;
-  border: 1px solid #bfdbfe;
+  display:
+    inline-block;
+  background:
+    var(--primary-tint);
+  color:
+    var(--primary);
+  font-family:
+    "Inter",
+    system-ui,
+    sans-serif;
+  font-size:
+    11.5px;
+  font-weight:
+    600;
+  padding:
+    3px 12px;
+  border-radius:
+    20px;
+  margin-top:
+    8px;
+  border:
+    1px solid
+    #bfdbfe;
 }
-
 /* =============================================================
    STATUS PILLS
-   pending:   #E2E8F0 / #475569
-   duplicate: #FEF3C7 / #92400E / 1px #F59E0B border
-   distinct:  #DCFCE7 / #166534
    ============================================================= */
-
 .status-pill-pending {
-  display: inline-block;
-  background: #e2e8f0;
-  color: #475569;
-  font-family: "Inter", system-ui, sans-serif;
-  font-size: 11.5px;
-  font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 20px;
-  margin-top: 6px;
+  display:
+    inline-block;
+  background:
+    #e2e8f0;
+  color:
+    #475569;
+  font-family:
+    "Inter",
+    system-ui,
+    sans-serif;
+  font-size:
+    11.5px;
+  font-weight:
+    600;
+  padding:
+    4px 12px;
+  border-radius:
+    20px;
+  margin-top:
+    6px;
 }
-
 .status-pill-duplicate {
-  display: inline-block;
-  background: #fef3c7;
-  color: #92400e;
-  font-family: "Inter", system-ui, sans-serif;
-  font-size: 11.5px;
-  font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 20px;
-  margin-top: 6px;
-  border: 1px solid #f59e0b;
+  display:
+    inline-block;
+  background:
+    #fef3c7;
+  color:
+    #92400e;
+  font-family:
+    "Inter",
+    system-ui,
+    sans-serif;
+  font-size:
+    11.5px;
+  font-weight:
+    600;
+  padding:
+    4px 12px;
+  border-radius:
+    20px;
+  margin-top:
+    6px;
+  border:
+    1px solid
+    #f59e0b;
 }
-
 .status-pill-distinct {
-  display: inline-block;
-  background: #dcfce7;
-  color: #166534;
-  font-family: "Inter", system-ui, sans-serif;
-  font-size: 11.5px;
-  font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 20px;
-  margin-top: 6px;
+  display:
+    inline-block;
+  background:
+    #dcfce7;
+  color:
+    #166534;
+  font-family:
+    "Inter",
+    system-ui,
+    sans-serif;
+  font-size:
+    11.5px;
+  font-weight:
+    600;
+  padding:
+    4px 12px;
+  border-radius:
+    20px;
+  margin-top:
+    6px;
 }
-
 /* =============================================================
    BUTTONS
-   Primary  → solid navy
-   All other → white fill, navy border/text
    ============================================================= */
-
 div.stButton > button,
 div.stDownloadButton > button {
-  font-family: "Inter", system-ui, sans-serif;
-  font-weight: 600;
-  border-radius: 8px;
-  border: 1.5px solid var(--primary);
-  color: var(--primary);
-  background: var(--bg-surface);
+  font-family:
+    "Inter",
+    system-ui,
+    sans-serif;
+  font-weight:
+    600;
+  border-radius:
+    8px;
+  border:
+    1.5px solid
+    var(--primary);
+  color:
+    var(--primary);
+  background:
+    var(--bg-surface);
   transition:
     background 0.14s ease,
     color 0.14s ease,
     border-color 0.14s ease,
     box-shadow 0.14s ease;
-  letter-spacing: 0.01em;
+  letter-spacing:
+    0.01em;
 }
-
 div.stButton > button:hover,
 div.stDownloadButton > button:hover {
-  background: var(--primary-tint);
-  color: var(--primary-hover);
-  border-color: var(--primary-hover);
-  box-shadow: 0 2px 8px rgba(30, 58, 138, 0.14);
+  background:
+    var(--primary-tint);
+  color:
+    var(--primary-hover);
+  border-color:
+    var(--primary-hover);
+  box-shadow:
+    0 2px 8px
+    rgba(30, 58, 138, 0.14);
 }
-
 div.stButton > button:focus-visible,
 div.stDownloadButton > button:focus-visible {
-  outline: 3px solid rgba(30, 58, 138, 0.4);
-  outline-offset: 2px;
+  outline:
+    3px solid
+    rgba(30, 58, 138, 0.4);
+  outline-offset:
+    2px;
 }
-
-/* Primary buttons — solid navy */
-div.stButton > button[kind="primary"] {
-  background-color: var(--primary) !important;
-  color: var(--text-on-pri) !important;
-  border-color: var(--primary) !important;
-}
-
-div.stButton > button[kind="primary"]:hover {
-  background-color: var(--primary-hover) !important;
-  border-color: var(--primary-hover) !important;
-  color: var(--text-on-pri) !important;
-}
-
 /* =============================================================
-   SLIDER: single colour, no hover halo
+   PRIMARY BUTTONS
    ============================================================= */
-
-div[data-testid="stSlider"] [role="slider"] {
-  background-color: var(--primary) !important;
-  border: 2px solid var(--primary) !important;
-  box-shadow: none !important;
-  outline: none !important;
+div.stButton > button[kind="primary"] {
+  background-color:
+    var(--primary) !important;
+  color:
+    var(--text-on-pri) !important;
+  border-color:
+    var(--primary) !important;
 }
-
+div.stButton > button[kind="primary"]:hover {
+  background-color:
+    var(--primary-hover) !important;
+  border-color:
+    var(--primary-hover) !important;
+  color:
+    var(--text-on-pri) !important;
+}
+/* =============================================================
+   SLIDER
+   ============================================================= */
+div[data-testid="stSlider"] [role="slider"] {
+  background-color:
+    var(--primary) !important;
+  border:
+    2px solid
+    var(--primary) !important;
+  box-shadow:
+    none !important;
+  outline:
+    none !important;
+}
 div[data-testid="stSlider"] [role="slider"]:hover,
 div[data-testid="stSlider"] [role="slider"]:focus,
 div[data-testid="stSlider"] [role="slider"]:focus-visible,
 div[data-testid="stSlider"] [role="slider"]:active {
-  box-shadow: none !important;
-  outline: none !important;
+  box-shadow:
+    none !important;
+  outline:
+    none !important;
 }
-
-div[data-testid="stSlider"] [data-testid="stThumbValue"],
-div[data-testid="stSlider"] [data-testid="stSliderThumbValue"] {
-  color: var(--primary) !important;
-  font-weight: 600;
-  background: transparent !important;
+div[data-testid="stSlider"]
+[data-testid="stThumbValue"],
+div[data-testid="stSlider"]
+[data-testid="stSliderThumbValue"] {
+  color:
+    var(--primary) !important;
+  font-weight:
+    600;
+  background:
+    transparent !important;
 }
-
 /* =============================================================
    TABS
    ============================================================= */
-
 .stTabs [data-baseweb="tab-list"] {
-  background: transparent;
-  border-bottom: 2px solid var(--border);
-  gap: 2px;
+  background:
+    transparent;
+  border-bottom:
+    2px solid
+    var(--border);
+  gap:
+    2px;
 }
-
 .stTabs [data-baseweb="tab"] {
-  font-family: "Inter", system-ui, sans-serif;
-  font-weight: 600;
-  font-size: 13.5px;
-  color: var(--text-muted);
-  padding: 8px 18px;
-  border-radius: 8px 8px 0 0;
-  border: none;
-  background: transparent;
+  font-family:
+    "Inter",
+    system-ui,
+    sans-serif;
+  font-weight:
+    600;
+  font-size:
+    13.5px;
+  color:
+    var(--text-muted);
+  padding:
+    8px 18px;
+  border-radius:
+    8px 8px 0 0;
+  border:
+    none;
+  background:
+    transparent;
   transition:
     color 0.12s,
     background 0.12s;
 }
-
 .stTabs [data-baseweb="tab"]:hover {
-  color: var(--primary);
-  background: var(--primary-tint);
+  color:
+    var(--primary);
+  background:
+    var(--primary-tint);
 }
-
 .stTabs [aria-selected="true"] {
-  color: var(--primary) !important;
-  border-bottom: 3px solid var(--primary) !important;
-  background: var(--bg-surface) !important;
+  color:
+    var(--primary) !important;
+  border-bottom:
+    3px solid
+    var(--primary) !important;
+  background:
+    var(--bg-surface) !important;
 }
-
 /* =============================================================
    EXPANDERS
    ============================================================= */
-
 .streamlit-expanderHeader {
-  font-family: "Inter", system-ui, sans-serif;
-  font-weight: 600;
-  color: var(--text-body);
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  font-family:
+    "Inter",
+    system-ui,
+    sans-serif;
+  font-weight:
+    600;
+  color:
+    var(--text-body);
+  background:
+    var(--bg-alt);
+  border:
+    1px solid
+    var(--border);
+  border-radius:
+    8px;
 }
-
 .streamlit-expanderContent {
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-top: none;
-  border-radius: 0 0 8px 8px;
+  background:
+    var(--bg-surface);
+  border:
+    1px solid
+    var(--border);
+  border-top:
+    none;
+  border-radius:
+    0 0 8px 8px;
 }
-
 /* =============================================================
    DATAFRAMES
    ============================================================= */
-
 [data-testid="stDataFrame"] {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-  font-family: "Inter", system-ui, sans-serif;
-  box-shadow: var(--shadow);
+  border:
+    1px solid
+    var(--border);
+  border-radius:
+    10px;
+  overflow:
+    hidden;
+  font-family:
+    "Inter",
+    system-ui,
+    sans-serif;
+  box-shadow:
+    var(--shadow);
 }
-
 /* =============================================================
    ALERTS
    ============================================================= */
-
 .stAlert {
-  border-radius: var(--radius);
-  font-family: "Inter", system-ui, sans-serif;
+  border-radius:
+    var(--radius);
+  font-family:
+    "Inter",
+    system-ui,
+    sans-serif;
 }
-
 /* =============================================================
    GRAPHVIZ
    ============================================================= */
-
 [data-testid="stGraphVizChart"] {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--bg-surface);
-  padding: 16px;
-  box-shadow: var(--shadow);
+  border:
+    1px solid
+    var(--border);
+  border-radius:
+    var(--radius);
+  background:
+    var(--bg-surface);
+  padding:
+    16px;
+  box-shadow:
+    var(--shadow);
 }
-
 /* =============================================================
-   FILE UPLOADER  (make it blend with card surface)
+   FILE UPLOADER
    ============================================================= */
-
-/* Drop zone wrapper */
 [data-testid="stFileUploader"] > div {
-  background: var(--bg-alt);
-  border: 1.5px dashed var(--border);
-  border-radius: 10px;
+  background:
+    var(--bg-alt);
+  border:
+    1.5px dashed
+    var(--border);
+  border-radius:
+    10px;
   transition:
     border-color 0.14s ease,
     background 0.14s ease;
 }
-
-/* Inner section — make the hit target taller */
 [data-testid="stFileUploader"] section {
-  min-height: 130px;
-  padding: 28px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  min-height:
+    130px;
+  padding:
+    28px 20px;
+  display:
+    flex;
+  flex-direction:
+    column;
+  align-items:
+    center;
+  justify-content:
+    center;
+  gap:
+    8px;
 }
-
-/* Hover state: navy tint */
 [data-testid="stFileUploader"] > div:hover {
-  border-color: var(--primary);
-  background: var(--primary-tint);
+  border-color:
+    var(--primary);
+  background:
+    var(--primary-tint);
 }
-
 /* =============================================================
    FOOTER
    ============================================================= */
-
 .footer {
-  text-align: center;
-  color: var(--text-muted);
-  font-family: "Inter", system-ui, sans-serif;
-  font-size: 13px;
-  margin-top: 64px;
-  padding: 20px;
-  border-top: 1px solid var(--border);
+  text-align:
+    center;
+  color:
+    var(--text-muted);
+  font-family:
+    "Inter",
+    system-ui,
+    sans-serif;
+  font-size:
+    13px;
+  margin-top:
+    64px;
+  padding:
+    20px;
+  border-top:
+    1px solid
+    var(--border);
 }
